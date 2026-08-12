@@ -1,4 +1,5 @@
 #include "math_module.hpp"
+#include "Errors_Table.hpp"
 #include "../Shell/ShellCore.hpp"
 #include <iostream>
 #include <limits>
@@ -136,10 +137,12 @@ void mathInterface(Shell& shell)  {
             try {
                 it->second();
             } catch (std::exception& err) {
-                std::cout << "Error: " << err.what() << std::endl;
+                shell.bios.logError(err.what());
+                addError("MathModule",err.what());
             }
         } else {
-            std::cout << "Unknown command" << std::endl;
+            shell.bios.logError("Unknown command");
+            addError("MathModule","Unknown command");
         }
     }
 } 

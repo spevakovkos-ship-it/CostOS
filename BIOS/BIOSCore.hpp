@@ -1,4 +1,5 @@
 #pragma once
+#include "../modules/Errors_Table.hpp"
 #include <string>
 #include <unordered_map>
 #include <fstream>
@@ -26,6 +27,7 @@ class BIOS {
         BIOS() {
             try {getConfig();} catch (std::exception&) {
                 loadConfig();
+                addError("BIOS","Config corrupted used SB");
             }
         }
         void loadConfig() {
@@ -86,7 +88,6 @@ class BIOS {
         } 
         void logError(const std::string &err) {
             if (logErrors == false) {
-                std::cout << "Error: logErrors is off in BIOS-conf" << std::endl;
                 return; 
             }
             std::cout << "Error: " << err << std::endl; 
@@ -109,7 +110,6 @@ class BIOS {
                 };
 
                 std::string input;
-
                 std::getline(std::cin,input);
 
                 std::stringstream ss(input);
@@ -147,7 +147,7 @@ class BIOS {
                     continue;
                 }
 
-                std::cout << "Unknown parameter\n";
+                logError("Unknown parameter");
             }
 
             };

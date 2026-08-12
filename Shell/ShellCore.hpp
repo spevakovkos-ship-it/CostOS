@@ -9,6 +9,7 @@ enum class Rights {
 #include <iostream>     
 #include <unordered_map>
 #include <vector>
+#include "../modules/Errors_Table.hpp"
 #include <sstream>
 #include "../modules/math_module.hpp"
 #include "../BIOS/BIOSCore.hpp"
@@ -19,8 +20,9 @@ class Shell {
         string command;
         Rights right;
         std::unordered_map<string,void (Shell::*)(const Args&)> commands;
-        BIOS bios;
+        
     public:
+        BIOS bios;
         string INPUT1;
         const string INPUT2 = "\n# ";
         string strRight;
@@ -34,6 +36,7 @@ class Shell {
                 {"print",&Shell::print},
                 {"colorPrint",&Shell::colorPrint},
                 {"mathMode",&Shell::mathMode},
+                {"errorsMode",&Shell::errorsMode}
             
             };
         }
@@ -42,7 +45,9 @@ class Shell {
         }
         void clear(const Args& args) {
             if (!args.empty()) {
-                std::cout << "Error: Clear not need args " << std::endl;
+                bios.logError("Error: Clear not need args");
+                addError("ShellCore","Clear not need args");
+
                 return;
             }
             #ifdef _WIN32
@@ -54,8 +59,8 @@ class Shell {
 
         void print(const Args& args) {
             if (args.empty()) {
-                std::cout << "Error: Print require args" << std::endl;
-                
+                bios.logError("Error: Print require args");
+                addError("ShellCore","Error: Print require args");
                 return;
             }
             for (const auto& printValue : args) {
@@ -68,6 +73,7 @@ class Shell {
         void colorPrint(const Args& args) {
             if (args.empty() || args.size() == 1) {
                 bios.logError("colorPrint require args");
+                addError("ShellCore","colorPrint require args");
                 return;
             }
 
@@ -106,12 +112,22 @@ class Shell {
         void mathMode(const Args& args) {
             if (!args.empty()) {
                 bios.logError("mathMode not need args");
-                
+                addError("ShellCore","mathMode not need args");
                 return;
             }
-            if (!bios.mathEnabled) 
-                std::cout << "Math mode off in BIOS setting" << std::endl;
+            if (!bios.mathEnabled)  {
+                bios.logError("Math mode off in BIOS setting");
+                addError("ShellCore","Math mode off in BIOS setting");
+            }
             else mathInterface(*this);
+        }
+        void errorsMode(const Args& args) {
+            if (!args.empty()) {
+                bios.logError("errors table not need args");
+                addError("ShellCore","errors table not need args");
+                return;
+            }
+            errorsTableInterface(*this);
         }
         void executeCommand() {
             std::istringstream iss(command);
@@ -133,7 +149,7 @@ class Shell {
             }
             else {
                 bios.logError("Unknown command");
-              
+                addError("ShellCore","Unknown command");
             }
         }
 };
