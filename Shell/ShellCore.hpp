@@ -49,7 +49,7 @@ class Shell {
                 addError("ShellCore","Clear not need args");
 
                 return;
-            }
+            }   
             #ifdef _WIN32
             std::system("cls");
             #else
