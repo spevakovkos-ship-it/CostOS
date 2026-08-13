@@ -70,6 +70,7 @@ The file manager uses an argument parser.
 to enter into file manager enter `fm` in normal mode
 
 | Command |     Arguments     | Description |
+|---|---|---|
 | `fm`    | `<command> <args>`| Call a fm-commands |
 | `fm write` | `<file name> <text> ...` | Command to enter text into a file
 | `fm create` | `<file name>` | Create a new file in folder UserData
