@@ -16,8 +16,8 @@ CostOS is a modular console-based system with a virtual BIOS, interactive Shell,
 - Dedicated Math subshell
 - Centralized Errors Table
 - Modular project structure
-- C++17
-
+- C++23
+- Build-in File Manager
 ## Core Shell Commands
 
 | Command | Arguments | Description |
@@ -27,7 +27,7 @@ CostOS is a modular console-based system with a virtual BIOS, interactive Shell,
 | `colorPrint` | `<Color> <text> ...` | Prints text using ANSI colors. |
 | `mathMode` | — | Opens the Math subshell. |
 | `errorsTable` | — | Opens the Errors Table. |
-
+| `fm` | `<command> <args for command1> ...` | Work with file manager
 ## Math Subshell
 
 The Math environment is a separate command interface launched with `mathMode`.
@@ -58,6 +58,21 @@ Math - User
 OS - User
 #
 ```
+
+## File manager
+
+
+CostOS includes a built-in file manager for working with user files
+
+
+The file manager uses an argument parser.
+### file manager commands
+to enter into file manager enter `fm` in normal mode
+
+| Command |     Arguments     | Description |
+| `fm`    | `<command> <args>`| Call a fm-commands |
+| `fm write` | `<file name> <text> ...` | Command to enter text into a file
+| `fm create` | `<file name>` | Create a new file in folder UserData
 
 ## Errors Table
 
@@ -256,7 +271,7 @@ CostOS/
 
 ### Requirements
 
-- C++17 or newer
+- C++23 or newer
 - GCC or MSVC
 - Windows
 - `<conio.h>`
@@ -273,7 +288,7 @@ cd CostOS
 ### Compile with GCC
 
 ```bash
-g++ -std=c++17 CostOSBoot/OSBoot.cpp modules/math_module.cpp modules/Errors_Table.cpp -o CostOS.exe
+g++ -std=c++23 CostOSBoot/OSBoot.cpp modules/math_module.cpp modules/Errors_Table.cpp -o CostOS.exe
 ```
 
 ### Run

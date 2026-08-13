@@ -4,13 +4,14 @@ enum class Rights {
     ROOT,
     SYSTEM
 };
-
+#include <sstream>
 #include <string>
+#include <format>
 #include <iostream>     
 #include <unordered_map>
 #include <vector>
 #include "../modules/Errors_Table.hpp"
-#include <sstream>
+
 #include "../modules/math_module.hpp"
 #include "../BIOS/BIOSCore.hpp"
 using std::string;
@@ -36,8 +37,8 @@ class Shell {
                 {"print",&Shell::print},
                 {"colorPrint",&Shell::colorPrint},
                 {"mathMode",&Shell::mathMode},
-                {"errorsMode",&Shell::errorsMode}
-            
+                {"errorsMode",&Shell::errorsMode},
+                {"fm",&Shell::fm}
             };
         }
         void switchCommand(string& newCommand) {
@@ -100,7 +101,7 @@ class Shell {
             if (color == colors.end()) {
                 std::cout << "Unknown color: " << inputColor << "  Using default color\n";
                 
-            }else {
+            } else {
                 std::cout << color->second;
             }   
             for (int i = 1;i < args.size();i++) {
@@ -129,6 +130,56 @@ class Shell {
             }
             errorsTableInterface(*this);
         }
+        void fmCreate(const Args&args) {
+            std::string path = std::format("UserData/{0}",args[0]);
+            std::cout << "ARG:  [" << args[0] << "]\n";
+            std::cout << "PATH: [" << path << "]\n";
+            std::ofstream f(path);
+
+            if (!f.is_open()) {
+                throw std::runtime_error("Error opening a file");
+            }
+            f.close();
+        }
+        void fmWrite(const Args& args) {
+            std::string path = std::format("UserData/{}", args[0]);
+
+            std::ofstream f(path);
+
+            if (!f.is_open()) {
+                throw std::runtime_error("Error opening a file");
+            }
+
+        for (size_t i = 1; i < args.size(); ++i) {
+            if (i > 1)
+                f << ' ';
+
+            f << args[i];
+            }
+        }
+        void fm(const Args& args) {
+            using fmCommand = void(Shell::*)(const Args& args);
+            std::unordered_map<std::string,fmCommand> FMCommands = {
+                {"create",&Shell::fmCreate},
+                {"write",&Shell::fmWrite}
+            };
+            auto it = FMCommands.find(args[0]);
+            if (it != FMCommands.end()) {
+                std::string line;
+                for (int i = 1;i < args.size();i++) {
+                     if (i > 1)
+                        line += ' ';
+
+                    line.append(args[i]);
+                }
+                Args argsForCmd;
+                std::istringstream iss(line);
+                std::string arg;
+                while (iss >> arg) 
+                    argsForCmd.push_back(arg);
+                (this->*(it->second))(argsForCmd);
+            }
+        }        
         void executeCommand() {
             std::istringstream iss(command);
             std::string cmd;
