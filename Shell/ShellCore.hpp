@@ -10,6 +10,7 @@ enum class Rights {
 #include <iostream>     
 #include <unordered_map>
 #include <vector>
+#include <unistd.h>
 #include "../modules/Errors_Table.hpp"
 
 #include "../modules/math_module.hpp"
@@ -38,7 +39,8 @@ class Shell {
                 {"colorPrint",&Shell::colorPrint},
                 {"mathMode",&Shell::mathMode},
                 {"errorsMode",&Shell::errorsMode},
-                {"fm",&Shell::fm}
+                {"fm",&Shell::fm},
+                {"animate",&Shell::animateCmd},{"anim",&Shell::animateCmd}
             };
         }
         void switchCommand(string& newCommand) {
@@ -46,7 +48,7 @@ class Shell {
         }
         void clear(const Args& args) {
             if (!args.empty()) {
-                bios.logError("Error: Clear not need args");
+                bios.logError("Clear not need args");
                 addError("ShellCore","Clear not need args");
 
                 return;
@@ -60,8 +62,8 @@ class Shell {
 
         void print(const Args& args) {
             if (args.empty()) {
-                bios.logError("Error: Print require args");
-                addError("ShellCore","Error: Print require args");
+                bios.logError("Print require args");
+                addError("ShellCore","Print require args");
                 return;
             }
             for (const auto& printValue : args) {
@@ -156,6 +158,34 @@ class Shell {
 
             f << args[i];
             }
+        }
+        
+        void animate(const std::string& text) {
+            std::cout << "\x1b[?25l                                         ";
+    
+            for (const char& v : text) {
+                usleep(100000);
+                if (v == '\n') {
+                    std::cout << "\n                                        ";
+                } else {
+                    std::cout << v ;
+                }
+            }
+            std::cout <<  "\x1b[?25h";
+        }
+        void animateCmd(const Args& args) {
+            if (args.empty())
+                return;
+
+            std::string text;
+
+            for (const auto& arg : args)
+                text += arg + " ";
+
+            
+            animate(text);
+            std::cout << std::endl;
+            
         }
         void fm(const Args& args) {
             using fmCommand = void(Shell::*)(const Args& args);

@@ -28,6 +28,7 @@ CostOS is a modular console-based system with a virtual BIOS, interactive Shell,
 | `mathMode` | — | Opens the Math subshell. |
 | `errorsTable` | — | Opens the Errors Table. |
 | `fm` | `<command> <args for command1> ...` | Work with file manager
+| `anim` / `animate` | `<text>...` | Animates a text 
 ## Math Subshell
 
 The Math environment is a separate command interface launched with `mathMode`.
@@ -276,6 +277,7 @@ CostOS/
 - GCC or MSVC
 - Windows
 - `<conio.h>`
+- `<unistd.h>`
 
 CostOS currently targets Windows because the bootloader uses `_getch()` and `_kbhit()`.
 
