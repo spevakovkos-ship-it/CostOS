@@ -75,7 +75,7 @@ to enter into file manager enter `fm` in normal mode
 | `fm`    | `<command> <args>`| Call a fm-commands |
 | `fm write` | `<file name> <text> ...` | Command to enter text into a file
 | `fm create` | `<file name>` | Create a new file in folder UserData
-
+| `fm read` | `<file name>` | Read text from file
 ## Errors Table
 
 CostOS contains a centralized Errors Table for storing runtime errors from different modules.

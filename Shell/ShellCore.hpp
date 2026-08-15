@@ -146,7 +146,7 @@ class Shell {
         void fmWrite(const Args& args) {
             std::string path = std::format("UserData/{}", args[0]);
 
-            std::ofstream f(path);
+            std::ofstream f(path,std::ios_base::app);
 
             if (!f.is_open()) {
                 throw std::runtime_error("Error opening a file");
@@ -158,8 +158,21 @@ class Shell {
 
             f << args[i];
             }
+             f << '\n'; 
         }
-        
+        void fmRead(const Args& args) {
+            std::string path = std::format("UserData/{}", args[0]);
+
+            std::ifstream f(path);
+
+            if (!f.is_open()) {
+                throw std::runtime_error("Error opening a file");
+            }
+            std::string line;
+            while (std::getline(f,line)) {
+                std::cout << line << std::endl;
+            }
+        }
         void animate(const std::string& text) {
             std::cout << "\x1b[?25l                                         ";
     
@@ -191,7 +204,8 @@ class Shell {
             using fmCommand = void(Shell::*)(const Args& args);
             std::unordered_map<std::string,fmCommand> FMCommands = {
                 {"create",&Shell::fmCreate},
-                {"write",&Shell::fmWrite}
+                {"write",&Shell::fmWrite},
+                {"read",&Shell::fmRead}
             };
             auto it = FMCommands.find(args[0]);
             if (it != FMCommands.end()) {
