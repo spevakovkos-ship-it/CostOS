@@ -11,6 +11,7 @@ enum class Rights {
 #include <unordered_map>
 #include <vector>
 #include <unistd.h>
+#include <filesystem>
 #include "../modules/Errors_Table.hpp"
 
 #include "../modules/math_module.hpp"
@@ -134,8 +135,6 @@ class Shell {
         }
         void fmCreate(const Args&args) {
             std::string path = std::format("UserData/{0}",args[0]);
-            std::cout << "ARG:  [" << args[0] << "]\n";
-            std::cout << "PATH: [" << path << "]\n";
             std::ofstream f(path);
 
             if (!f.is_open()) {
@@ -173,6 +172,43 @@ class Shell {
                 std::cout << line << std::endl;
             }
         }
+        void fmRemove(const Args& args) {
+           if (args.empty()) {
+                bios.logError("Fm remove need args");
+                addError("File manager","Fm remove need args");
+
+           }
+            std::filesystem::path path = std::format("UserData/{}", args[0]);
+            try {
+                if (std::filesystem::remove(path)) {
+                    std::cout << "File " << path << " deleted" << std::endl;
+                } else {
+                    std::cout << "File " << path << " not found" << std::endl;
+                }
+            } catch (const std::filesystem::filesystem_error& e) {
+                bios.logError(e.what());
+                addError("File manager",e.what());
+
+            }
+        }
+        void fmDir(const Args& args) {
+            std::filesystem::path catalogPath = "UserData"; 
+        try {
+        if (std::filesystem::exists(catalogPath) && std::filesystem::is_directory(catalogPath)) {
+            for (const auto& entry : std::filesystem::directory_iterator(catalogPath)) {
+                if (entry.is_regular_file()) {
+                    std::cout << entry.path().filename() << std::endl;
+                }
+            }
+        } else {
+            std::cout << "Directory does not exist.\n";
+        }
+    } catch (const std::filesystem::filesystem_error& e) {
+        bios.logError(e.what());
+        addError("File manager",e.what());
+    }
+
+        }
         void animate(const std::string& text) {
             std::cout << "\x1b[?25l                                         ";
     
@@ -205,7 +241,9 @@ class Shell {
             std::unordered_map<std::string,fmCommand> FMCommands = {
                 {"create",&Shell::fmCreate},
                 {"write",&Shell::fmWrite},
-                {"read",&Shell::fmRead}
+                {"read",&Shell::fmRead},
+                {"dir",&Shell::fmDir},
+                {"remove",&Shell::fmRemove}
             };
             auto it = FMCommands.find(args[0]);
             if (it != FMCommands.end()) {
