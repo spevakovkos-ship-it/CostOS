@@ -18,6 +18,7 @@ CostOS is a modular console-based system with a virtual BIOS, interactive Shell,
 - Modular project structure
 - C++23
 - Build-in File Manager
+- Packages system
 ## Core Shell Commands
 
 | Command | Arguments | Description |
@@ -29,6 +30,7 @@ CostOS is a modular console-based system with a virtual BIOS, interactive Shell,
 | `errorsTable` | — | Opens the Errors Table. |
 | `fm` | `<command> <args for command1> ...` | Work with file manager
 | `anim` / `animate` | `<text>...` | Animates a text 
+| `costos_pkg` | `<command> <args for command1> ...` | Work with packages
 ## Math Subshell
 
 The Math environment is a separate command interface launched with `mathMode`.
@@ -67,6 +69,23 @@ CostOS includes a built-in file manager for working with user files
 
 
 The file manager uses an argument parser.
+## Packages
+CostOS includes a built-in packages for working with packages
+
+### packages commands
+to enter into packages enter `costos_pkg` in normal mode
+
+
+| Command |     Arguments     | Description |
+|---|---|---|
+|`costos_pkg`| `<command> <args1> ...` | Call a pkg-commands
+|`costos_pkg install ` | `<pkg name>`| install a new package
+|`costos_pkg call` | `<pkg name> <args>` | call a package with args
+### avalible packages
+```
+counter - added a counter to call need range min-max and time timeLiteral
+colorful_console - added a color console to call need color of the console
+```
 ### file manager commands
 to enter into file manager enter `fm` in normal mode
 
@@ -242,6 +261,13 @@ CostOS/
 │   ├── CostOsCore.hpp
 │   └── OSBoot.cpp
 │
+├── pkg/
+│   ├── counter/
+│       └──.hpp and .cpp
+│   └── colorful_console/
+│         └──.hpp and .cpp
+│     
+│   
 ├── modules/
 │   ├── Errors_Table.cpp
 │   ├── Errors_Table.hpp
@@ -293,7 +319,7 @@ cd CostOS
 ### Compile with GCC
 
 ```bash
-g++ -std=c++23 CostOSBoot/OSBoot.cpp modules/math_module.cpp modules/Errors_Table.cpp -o CostOS.exe
+g++ -std=c++23 CostOSBoot/OSBoot.cpp modules/math_module.cpp modules/Errors_Table.cpp pkg/counter/counter.cpp pkg/colorful_console/colorful_console.cpp -o CostOS.exe
 ```
 
 ### Run

@@ -10,25 +10,35 @@ enum class Rights {
 #include <iostream>     
 #include <unordered_map>
 #include <vector>
-#include <unistd.h>
 #include <filesystem>
-#include "../modules/Errors_Table.hpp"
+#include <thread>
+#include <chrono>
+#include <functional>
 
+#include "../modules/Errors_Table.hpp"
+#include "../pkg/counter/counter.hpp"
 #include "../modules/math_module.hpp"
 #include "../BIOS/BIOSCore.hpp"
+#include "../pkg/colorful_console/colorful_console.hpp"
 using std::string;
-using Args = std::vector<string>;
+
+using namespace std::chrono_literals;
 class Shell {
     private:
         string command;
         Rights right;
         std::unordered_map<string,void (Shell::*)(const Args&)> commands;
-        
+        std::unordered_map<string,void (*)(const Args&)> packageCommands;
+        inline static const std::unordered_map<std::string, bool*> packages = {
+            {"counter", &counterDownloaded},
+            {"colorful_console",&colorful_consoleDownloaded}
+        };
     public:
         BIOS bios;
         string INPUT1;
         const string INPUT2 = "\n# ";
         string strRight;
+
         Shell(BIOS& biosArg) {
             this->right = Rights::USER;
             this->strRight = "User";
@@ -41,9 +51,19 @@ class Shell {
                 {"mathMode",&Shell::mathMode},
                 {"errorsMode",&Shell::errorsMode},
                 {"fm",&Shell::fm},
-                {"animate",&Shell::animateCmd},{"anim",&Shell::animateCmd}
+                {"animate",&Shell::animateCmd},{"anim",&Shell::animateCmd},
+                {"costos_pkg",&Shell::costosPkg},
+            };
+            packageCommands = {
+                {"counter",&counter},
+                {"colorful_console",&colorful_console}
+            };
+            static const std::unordered_map<std::string,bool*> packages = {
+                {"counter",&counterDownloaded},
+                {"colorful_console",&colorful_consoleDownloaded}
             };
         }
+
         void switchCommand(string& newCommand) {
             command = newCommand;
         }
@@ -73,7 +93,72 @@ class Shell {
 
             std::cout << "\n";
         }
+         
+        void pkgInstall(const Args& args) {
+           
+            if (args.empty()) {
+                bios.logError("Package name required");
+                addError("ShellCore","Package name required");
+            }
 
+            std::string packageName = args[0];
+
+            auto it = packages.find(packageName);
+
+            if (it != packages.end()) {
+                for (int i = 0;i < 100;i+=10) {
+                    std::cout << "\n[PackagesInstaller] Resolving promises " << i <<"...";
+                    std::this_thread::sleep_for(500ms);
+                }
+                for (int i = 0;i < 100;i+=10) {
+                    std::cout << "\n[PackagesInstaller] Getting a premission from BIOS  " << i <<"...";
+                    std::this_thread::sleep_for(100ms);
+                }
+                for (int i = 0;i < 100;i+=10) {
+                    std::cout << "\n[PackagesInstaller] Installing  " << i <<"...";
+                    std::this_thread::sleep_for(750ms);
+                }
+                *it->second = true;
+                std::cout << "\n[PackagesInstaller] Done " << packageName <<" installed\n";
+            }
+        }
+        void callPkg(const Args& args) {
+            std::string name = args[0]; 
+            Args newArgs;
+            std::string arg;
+            for (int i = 1;i < args.size();++i) {
+                arg = args[i];
+                newArgs.push_back(arg);
+                arg = "";
+            }
+            auto it = packageCommands.find(name);
+            if (it != packageCommands.end()) {
+                std::invoke(it->second,newArgs);
+            }
+            }
+        void costosPkg(const Args& args) {
+            using pkgCommand = void(Shell::*)(const Args& args);
+            std::unordered_map<std::string,pkgCommand> pkgCommands = {
+                {"install",&Shell::pkgInstall},
+                {"call",&Shell::callPkg}
+            };
+            auto it = pkgCommands.find(args[0]);
+            if (it != pkgCommands.end()) {
+                std::string line;
+                for (int i = 1;i < args.size();i++) {
+                     if (i > 1)
+                        line += ' ';
+
+                    line.append(args[i]);
+                }
+                Args argsForCmd;
+                std::istringstream iss(line);
+                std::string arg;
+                while (iss >> arg) 
+                    argsForCmd.push_back(arg);
+                (this->*(it->second))(argsForCmd);
+            };
+        }        
         void colorPrint(const Args& args) {
             if (args.empty() || args.size() == 1) {
                 bios.logError("colorPrint require args");
@@ -131,7 +216,7 @@ class Shell {
                 addError("ShellCore","errors table not need args");
                 return;
             }
-            errorsTableInterface(*this);
+            errorsTableInterface(*this);    
         }
         void fmCreate(const Args&args) {
             std::string path = std::format("UserData/{0}",args[0]);
@@ -213,7 +298,7 @@ class Shell {
             std::cout << "\x1b[?25l                                         ";
     
             for (const char& v : text) {
-                usleep(100000);
+                std::this_thread::sleep_for(100ms);
                 if (v == '\n') {
                     std::cout << "\n                                        ";
                 } else {

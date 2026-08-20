@@ -21,17 +21,26 @@ class BIOS {
         using BoolPtr = bool BIOS::*;
         using IntPtr  = int BIOS::*;
         using FieldPtr = std::variant<BoolPtr, IntPtr>;
+        std::string PATH = "BIOS/Config.conf";
     public:
         bool mathEnabled = true;
-        bool logErrors = true;
+        bool logErrors = true; 
         BIOS() {
             try {getConfig();} catch (std::exception&) {
-                loadConfig();
+                try {loadConfig(PATH);} catch (std::exception&) {
+                    addError("BIOS","Config corrupted used SB");
+                    PATH = "CostOS/BIOS/Config.conf";
+                    try {loadConfig(PATH);} catch (std::exception&) {
+                        std::cout << "\nError loading Config.conf, Please ensure that you are in the project folder." << std::endl;
+                    }
+                }
                 addError("BIOS","Config corrupted used SB");
+
+                 
             }
         }
-        void loadConfig() {
-            std::ofstream conf("BIOS/Config.conf",std::ios_base::out);
+        void loadConfig(const std::string & path) {
+            std::ofstream conf(path,std::ios_base::out);
 
             if (!conf.is_open())
                 throw std::runtime_error("Error: opening a Config.conf failed");
@@ -120,7 +129,7 @@ class BIOS {
                 ss >> par;
 
                 if (par == "exit" || par == "q" || par == "quit" || par == "execute-[1]") {
-                    loadConfig();
+                    loadConfig(PATH);
                     break;
                 } 
                 auto itBool = boolMap.find(par);
@@ -130,7 +139,7 @@ class BIOS {
                         BoolPtr ptr = itBool->second;
                         this->*ptr = value;
                     }
-                    loadConfig();
+                    loadConfig(PATH);
                     std::cout << "Reboot system to apply the changes\n" << std::endl;
                     continue; 
                 }
@@ -142,7 +151,7 @@ class BIOS {
                         IntPtr ptr = itInt->second;
                         this->*ptr = value; 
                     }
-                    loadConfig();
+                    loadConfig(PATH);
                     std::cout << "Reboot system to apply the changes" << std::endl;
                     continue;
                 }
