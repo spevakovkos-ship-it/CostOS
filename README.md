@@ -62,13 +62,6 @@ OS - User
 #
 ```
 
-## File manager
-
-
-CostOS includes a built-in file manager for working with user files
-
-
-The file manager uses an argument parser.
 ## Packages
 CostOS includes a built-in packages for working with packages
 
@@ -86,6 +79,24 @@ to enter into packages enter `costos_pkg` in normal mode
 counter - added a counter to call need range min-max and time timeLiteral
 colorful_console - added a color console to call need color of the console
 ```
+## SYSTEM mode
+CostOS includes a build-in SYSTEM mode
+if you in system mode you can use syscall
+
+### SYSTEM mode commands
+| Command |     Arguments     | Description |
+|---|---|---|
+|`syscall` | `<command> <arg1> ...` | work with SYSTEM mode
+|`syscall changeINPUT1`| `<newInput>`| change a input 
+|`syscall changeINPUT2`| `<newInput>`| change a input 
+## File manager
+
+
+CostOS includes a build-in file manager for working with user files
+
+
+The file manager uses an argument parser.
+
 ### file manager commands
 to enter into file manager enter `fm` in normal mode
 
@@ -134,7 +145,7 @@ ErrorsTable - User
 Module [BIOS]:
   - Failed to load configuration
 
-Module [Shell]:
+Module [ShellCore]:
   - Unknown command
 
 Module [Math]:
@@ -298,7 +309,6 @@ CostOS/
 ```
 
 ## Build
-
 ### Requirements
 
 - C++23 or newer
@@ -327,7 +337,10 @@ g++ -std=c++23 CostOSBoot/OSBoot.cpp modules/math_module.cpp modules/Errors_Tabl
 ```bash
 ./CostOS.exe
 ```
-
+### Run with SYSTEM mode
+```bash
+./CostOS.exe -tools 
+```
 ## Current Status
 
 CostOS is an ongoing hobby project focused on C++ development, modular architecture, CLI systems, BIOS simulation, configuration management, command dispatching, and runtime error management.
