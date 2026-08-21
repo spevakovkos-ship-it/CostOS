@@ -24,6 +24,7 @@ void colorful_console(const std::vector<std::string>& args) {
         {"Light-magenta", "\033[95m"},
         {"Light-cyan", "\033[96m"},
         {"Light-white", "\033[97m"},
+        {"reset","\033[0m"}
     };
 
 

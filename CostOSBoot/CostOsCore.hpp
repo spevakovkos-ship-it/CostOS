@@ -12,13 +12,13 @@ class CostOS {
         Shell shell;
     public: 
 
-        CostOS(BIOS&bios,Shell&shell) : bios(), shell(this->bios) {
+        CostOS(BIOS&bios,Shell&shell,bool tools) : bios(), shell(this->bios,tools) {
         }
 
         void Boot() {
 
             
-            std::cout << "Welcome to Cost OS cpp!\nEnter A to enter to the system, enter DEL to enter intro the BIOS settings\n# ";
+            std::cout << "\nWelcome to Cost OS cpp!\nEnter A to enter to the system, enter DEL to enter intro the BIOS settings\n# ";
             while (true) {
                 if (_kbhit()) {
                     int ch = _getch();
@@ -35,7 +35,7 @@ class CostOS {
                         switch (extended) {
                             case 83:
                                 bios.BIOSInterface();
-                                 std::cout << "Welcome to Cost OS cpp!\nEnter A to enter to the system, enter DEL to enter intro the BIOS settings\n# ";
+                                 std::cout << "\nWelcome to Cost OS cpp!\nEnter A to enter to the system, enter DEL to enter intro the BIOS settings\n# ";
                         }
                     }
                 }

@@ -36,12 +36,17 @@ class Shell {
     public:
         BIOS bios;
         string INPUT1;
-        const string INPUT2 = "\n# ";
+        string INPUT2 = "# ";
         string strRight;
 
-        Shell(BIOS& biosArg) {
+        Shell(BIOS& biosArg,bool tools) {
             this->right = Rights::USER;
-            this->strRight = "User";
+            this->strRight = "User\n";
+            if (tools) {
+                this->right = Rights::SYSTEM;
+                this->strRight = "SYSTEM\n";
+
+            }
             this->INPUT1 = "OS -";
             this->bios = biosArg;
             commands = {
@@ -53,6 +58,7 @@ class Shell {
                 {"fm",&Shell::fm},
                 {"animate",&Shell::animateCmd},{"anim",&Shell::animateCmd},
                 {"costos_pkg",&Shell::costosPkg},
+                {"syscall",&Shell::syscall}
             };
             packageCommands = {
                 {"counter",&counter},
@@ -93,7 +99,47 @@ class Shell {
 
             std::cout << "\n";
         }
-         
+        void SCchangeINPUT2(const Args& args) {
+            if (args.empty()) {
+                std::cout << "SYSTEM ERROR: SYSCALL CHANGEINPUT NEED A ARGUMENTS" << std::endl;
+                return;
+            }
+            INPUT2 = args[0];
+        }
+        void SCchangeINPUT1(const Args& args) {
+            if (args.empty()) {
+                std::cout << "SYSTEM ERROR: SYSCALL CHANGEINPUT NEED A ARGUMENTS" << std::endl;
+                return;
+            }
+            INPUT1 = args[0];
+        }
+        void syscall(const Args& args) {
+            if (right != Rights::SYSTEM) {
+                bios.logError("Permission denied");
+                addError("ShellCore","Permission denied");
+                return;
+            }
+            using syscallCommands = void(Shell::*)(const Args&);
+            static const std::unordered_map<std::string,syscallCommands> commandsForsyscall = {
+                {"changeINPUT2",Shell::SCchangeINPUT2},
+            };
+            auto it = commandsForsyscall.find(args[0]);
+            if (it != commandsForsyscall.end()) {
+                std::string line;
+                for (int i = 1;i < args.size();i++) {
+                     if (i > 1)
+                        line += ' ';
+
+                    line.append(args[i]);
+                }
+                Args argsForCmd;
+                std::istringstream iss(line);
+                std::string arg;
+                while (iss >> arg) 
+                    argsForCmd.push_back(arg);
+                (this->*(it->second))(argsForCmd);
+            };
+        }
         void pkgInstall(const Args& args) {
            
             if (args.empty()) {
@@ -135,7 +181,7 @@ class Shell {
             if (it != packageCommands.end()) {
                 std::invoke(it->second,newArgs);
             }
-            }
+        }
         void costosPkg(const Args& args) {
             using pkgCommand = void(Shell::*)(const Args& args);
             std::unordered_map<std::string,pkgCommand> pkgCommands = {
