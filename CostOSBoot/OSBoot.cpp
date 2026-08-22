@@ -1,5 +1,6 @@
 #include "CostOsCore.hpp"
 #include <unistd.h>
+
 void animate(const std::string& text) {
     std::cout << "\x1b[?25l                                         ";
     
@@ -16,18 +17,26 @@ void animate(const std::string& text) {
 
 int main(int argc,char *argv[]) {
     bool toolsMode = false;
-
+    bool skipLoading = false;
+    const std::unordered_map<std::string,bool*> flags = {
+        {"-tools",&toolsMode},{"-TOOLS",&toolsMode},
+        {"-skipLoading",&skipLoading},
+    };
     if (argc >= 2) {
-        std::string arg = argv[1];
+        for (int i = 0;i < argc;++i) {
+            std::string arg = argv[i];
 
-        if (arg == "-TOOLS" || arg == "-tools") {
-            toolsMode = true;
+            auto it = flags.find(arg);
+
+            if (it != flags.end()) {
+                *it->second = true;
+            }
         }
     }
     BIOS bios;
     Shell s(bios,toolsMode);
     CostOS os(bios,s,toolsMode);    
-    animate("Welcome to CostOS! \n now loading started... \n progress:[###################################]");
+    if (!skipLoading) animate("Welcome to CostOS! \n now loading started... \n progress:[###################################]");
     std::cout << std::endl;
     os.Boot();
     return 0;

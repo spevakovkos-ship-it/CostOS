@@ -35,7 +35,7 @@ class Shell {
         };
     public:
         BIOS bios;
-        string INPUT1;
+        string INPUT1 = "OS -";
         string INPUT2 = "# ";
         string strRight;
 
@@ -44,10 +44,9 @@ class Shell {
             this->strRight = "User\n";
             if (tools) {
                 this->right = Rights::SYSTEM;
-                this->strRight = "SYSTEM\n";
+                    this->strRight = "SYSTEM\n";
 
             }
-            this->INPUT1 = "OS -";
             this->bios = biosArg;
             commands = {
                 {"clear",&Shell::clear},
@@ -111,7 +110,7 @@ class Shell {
                 std::cout << "SYSTEM ERROR: SYSCALL CHANGEINPUT NEED A ARGUMENTS" << std::endl;
                 return;
             }
-            INPUT1 = args[0];
+            INPUT1 = (args[0] + " -");
         }
         void syscall(const Args& args) {
             if (right != Rights::SYSTEM) {
@@ -122,6 +121,7 @@ class Shell {
             using syscallCommands = void(Shell::*)(const Args&);
             static const std::unordered_map<std::string,syscallCommands> commandsForsyscall = {
                 {"changeINPUT2",Shell::SCchangeINPUT2},
+                {"changeINPUT1",Shell::SCchangeINPUT1}
             };
             auto it = commandsForsyscall.find(args[0]);
             if (it != commandsForsyscall.end()) {
@@ -145,6 +145,7 @@ class Shell {
             if (args.empty()) {
                 bios.logError("Package name required");
                 addError("ShellCore","Package name required");
+                return;
             }
 
             std::string packageName = args[0];

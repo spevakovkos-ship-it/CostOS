@@ -341,6 +341,10 @@ g++ -std=c++23 CostOSBoot/OSBoot.cpp modules/math_module.cpp modules/Errors_Tabl
 ```bash
 ./CostOS.exe -tools 
 ```
+### Run with skip a loading
+```bash
+./CostOS.exe -skipLoading
+```
 ## Current Status
 
 CostOS is an ongoing hobby project focused on C++ development, modular architecture, CLI systems, BIOS simulation, configuration management, command dispatching, and runtime error management.
