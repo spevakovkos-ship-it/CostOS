@@ -73,11 +73,25 @@ to enter into packages enter `costos_pkg` in normal mode
 |---|---|---|
 |`costos_pkg`| `<command> <args1> ...` | Call a pkg-commands
 |`costos_pkg install ` | `<pkg name>`| install a new package
+|`costos_pkg remove ` | `<pkg name>`| remove a package
 |`costos_pkg call` | `<pkg name> <args>` | call a package with args
 ### avalible packages
 ```
-counter - added a counter to call need range min-max and time timeLiteral
+counter - added a counter to call need range min-max time timeLiteral
 colorful_console - added a color console to call need color of the console
+fm20 - added a extended file manager to call need command args 
+
+### fm20 Commands
+| Command |     Arguments     | Description |
+|---|---|---|
+|`reverse`|`<fileName>`|reverses a file
+|`find`|`<fileName>`|finds a file
+|`grep`|`<fileName> <text>`| grep text in a file
+|`head`|`<fileName> <count>`|get a first count lines in a file
+|`tail`|`<fileName> <count>`|get a last count lines in a file
+|`head`|`<fileName> <count>`|get a first count lines in a file
+|`wc`|`<fileName>`|get info of file
+
 ```
 ## SYSTEM mode
 CostOS includes a build-in SYSTEM mode
@@ -277,8 +291,10 @@ CostOS/
 ├── pkg/
 │   ├── counter/
 │       └──.hpp and .cpp
-│   └── colorful_console/
-│         └──.hpp and .cpp
+│   ├── colorful_console/
+│       └──.hpp and .cpp
+│   └── fm20/
+│       └──.hpp and .cpp
 │     
 │   
 ├── modules/
@@ -331,7 +347,7 @@ cd CostOS
 ### Compile with GCC
 
 ```bash
-g++ -std=c++23 CostOSBoot/OSBoot.cpp modules/math_module.cpp modules/Errors_Table.cpp pkg/counter/counter.cpp pkg/colorful_console/colorful_console.cpp -o CostOS.exe
+g++ -std=c++23 CostOSBoot/OSBoot.cpp modules/math_module.cpp modules/Errors_Table.cpp pkg/counter/counter.cpp pkg/colorful_console/colorful_console.cpp pkg/fm20/fm20.cpp  -o CostOS.exe
 ```
 
 ### Run

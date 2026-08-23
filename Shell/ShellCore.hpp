@@ -20,6 +20,7 @@ enum class Rights {
 #include "../modules/math_module.hpp"
 #include "../BIOS/BIOSCore.hpp"
 #include "../pkg/colorful_console/colorful_console.hpp"
+#include "../pkg/fm20/fm20.hpp"
 using std::string;
 
 using namespace std::chrono_literals;
@@ -31,7 +32,8 @@ class Shell {
         std::unordered_map<string,void (*)(const Args&)> packageCommands;
         inline static const std::unordered_map<string,bool*> packages = {
             {"counter", &counterDownloaded},
-            {"colorful_console",&colorful_consoleDownloaded}
+            {"colorful_console",&colorful_consoleDownloaded},
+            {"fm20",&fm20Downloaded}
         };
     public:
         BIOS bios;
@@ -61,11 +63,13 @@ class Shell {
             };
             packageCommands = {
                 {"counter",&counter},
-                {"colorful_console",&colorful_console}
+                {"colorful_console",&colorful_console},
+                {"fm20",&fm20}
             };
             static const std::unordered_map<std::string,bool*> packages = {
                 {"counter",&counterDownloaded},
-                {"colorful_console",&colorful_consoleDownloaded}
+                {"colorful_console",&colorful_consoleDownloaded},
+                {"fm20",&fm20Downloaded}
             };
         }
 
@@ -162,22 +166,27 @@ class Shell {
 
             if (it != packages.end()) {
                 for (int i = 0;i < 100;i+=10) {
-                    std::cout << "\n[PackagesInstaller] Resolving promises " << i <<"...";
+                    std::cout << "\n[PackegesManager] Resolving promises " << i <<"...";
                     std::this_thread::sleep_for(500ms);
                 }
                 for (int i = 0;i < 100;i+=10) {
-                    std::cout << "\n[PackagesInstaller] Getting a premission from BIOS  " << i <<"...";
+                    std::cout << "\n[PackegesManager] Getting a premission from BIOS  " << i <<"...";
                     std::this_thread::sleep_for(100ms);
                 }
                 for (int i = 0;i < 100;i+=10) {
-                    std::cout << "\n[PackagesInstaller] Installing  " << i <<"...";
+                    std::cout << "\n[PackegesManager] Installing  " << i <<"...";
                     std::this_thread::sleep_for(750ms);
                 }
                 *it->second = true;
-                std::cout << "\n[PackagesInstaller] Done " << packageName <<" installed\n";
+                std::cout << "\n[PackegesManager] Done " << packageName <<" installed\n";
             }
         }
-        void callPkg(const Args& args) {
+        void pkgCall(const Args& args) {
+            if (args.empty()) {
+                bios.logError("PKG call need arguments");
+                addError("ShellCore","PKG call need arguments");
+                return;
+            }
             std::string name = args[0]; 
             Args newArgs;
             std::string arg;
@@ -189,13 +198,44 @@ class Shell {
             auto it = packageCommands.find(name);
             if (it != packageCommands.end()) {
                 std::invoke(it->second,newArgs);
+            } else {
+                bios.logError("Package not found");
+                addError("ShellCore","Package not found");
+            }
+        }
+        void pkgRemove(const Args& args) {
+            if (args.empty()) {
+                bios.logError("PKG remove need arguments");
+                addError("ShellCore","PKG remove need arguments");
+                return;
+            }
+            string name = args[0];
+
+            auto it = packages.find(name);
+
+            if (it != packages.end()) {
+                for (int i = 0;i < 100;i+=10) {
+                    std::cout << "\n[PackagesManager] DeResolving promises " << i <<"...";
+                    std::this_thread::sleep_for(500ms);
+                }
+                for (int i = 0;i < 100;i+=10) {
+                    std::cout << "\n[PackagesManager] Getting a premission from BIOS  " << i <<"...";
+                    std::this_thread::sleep_for(100ms);
+                }
+                for (int i = 0;i < 100;i+=10) {
+                    std::cout << "\n[PackagesManager] Removeing " << i <<"...";
+                    std::this_thread::sleep_for(750ms);
+                }
+                *it->second = false;
+                std::cout << "\n[PackagesManager] Done " << name <<" removed\n";
             }
         }
         void costosPkg(const Args& args) {
             using pkgCommand = void(Shell::*)(const Args& args);
             std::unordered_map<std::string,pkgCommand> pkgCommands = {
                 {"install",&Shell::pkgInstall},
-                {"call",&Shell::callPkg}
+                {"call",&Shell::pkgCall},
+                {"remove",&Shell::pkgRemove}
             };
             auto it = pkgCommands.find(args[0]);
             if (it != pkgCommands.end()) {
@@ -336,21 +376,20 @@ class Shell {
         }
         void fmDir(const Args& args) {
             std::filesystem::path catalogPath = "UserData"; 
-        try {
-        if (std::filesystem::exists(catalogPath) && std::filesystem::is_directory(catalogPath)) {
-            for (const auto& entry : std::filesystem::directory_iterator(catalogPath)) {
-                if (entry.is_regular_file()) {
-                    std::cout << entry.path().filename() << std::endl;
+            try {
+                if (std::filesystem::exists(catalogPath) && std::filesystem::is_directory(catalogPath)) {
+                    for (const auto& entry : std::filesystem::directory_iterator(catalogPath)) {
+                        if (entry.is_regular_file()) {
+                            std::cout << entry.path().filename() << std::endl;
+                        }
+                    }
+                } else {
+                    std::cout << "Directory does not exist.\n";
                 }
+            } catch (const std::filesystem::filesystem_error& e) {
+                bios.logError(e.what());
+                addError("File manager",e.what());
             }
-        } else {
-            std::cout << "Directory does not exist.\n";
-        }
-    } catch (const std::filesystem::filesystem_error& e) {
-        bios.logError(e.what());
-        addError("File manager",e.what());
-    }
-
         }
         void animate(const std::string& text) {
             std::cout << "\x1b[?25l                                         ";
