@@ -29,7 +29,7 @@ class Shell {
         Rights right;
         std::unordered_map<string,void (Shell::*)(const Args&)> commands;
         std::unordered_map<string,void (*)(const Args&)> packageCommands;
-        inline static const std::unordered_map<std::string, bool*> packages = {
+        inline static const std::unordered_map<string,bool*> packages = {
             {"counter", &counterDownloaded},
             {"colorful_console",&colorful_consoleDownloaded}
         };
@@ -103,7 +103,7 @@ class Shell {
                 std::cout << "SYSTEM ERROR: SYSCALL CHANGEINPUT NEED A ARGUMENTS" << std::endl;
                 return;
             }
-            INPUT2 = args[0];
+            INPUT2 = (args[0] + ' ');
         }
         void SCchangeINPUT1(const Args& args) {
             if (args.empty()) {
@@ -111,6 +111,13 @@ class Shell {
                 return;
             }
             INPUT1 = (args[0] + " -");
+        }
+        void SCchangeColor(const Args& args) {
+            if (args.empty()) {
+                std::cout << "SYSTEM ERROR: SYSCALL CHANGECOLOR NEED A ARGUMENTS" << std::endl;
+                return;
+            }
+            std::cout << "\033["<<args[0] << "m";
         }
         void syscall(const Args& args) {
             if (right != Rights::SYSTEM) {
@@ -121,7 +128,8 @@ class Shell {
             using syscallCommands = void(Shell::*)(const Args&);
             static const std::unordered_map<std::string,syscallCommands> commandsForsyscall = {
                 {"changeINPUT2",Shell::SCchangeINPUT2},
-                {"changeINPUT1",Shell::SCchangeINPUT1}
+                {"changeINPUT1",Shell::SCchangeINPUT1},
+                {"changeCOLOR",Shell::SCchangeColor}
             };
             auto it = commandsForsyscall.find(args[0]);
             if (it != commandsForsyscall.end()) {
@@ -290,6 +298,9 @@ class Shell {
             f << args[i];
             }
              f << '\n'; 
+        }
+        ~Shell() {
+            std::cout << "\033[0m";
         }
         void fmRead(const Args& args) {
             std::string path = std::format("UserData/{}", args[0]);

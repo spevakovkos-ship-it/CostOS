@@ -1,6 +1,5 @@
 #include "CostOsCore.hpp"
 #include <unistd.h>
-
 void animate(const std::string& text) {
     std::cout << "\x1b[?25l                                         ";
     
@@ -18,7 +17,7 @@ void animate(const std::string& text) {
 int main(int argc,char *argv[]) {
     bool toolsMode = false;
     bool skipLoading = false;
-    const std::unordered_map<std::string,bool*> flags = {
+    std::unordered_map<std::string,bool*> flags = {
         {"-tools",&toolsMode},{"-TOOLS",&toolsMode},
         {"-skipLoading",&skipLoading},
     };
