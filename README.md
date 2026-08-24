@@ -92,7 +92,6 @@ fm20 - added a extended file manager to call need command args
 |`head`|`<fileName> <count>`|get a first count lines in a file
 |`wc`|`<fileName>`|get info of file
 
-```
 ## SYSTEM mode
 CostOS includes a build-in SYSTEM mode
 if you in system mode you can use syscall
