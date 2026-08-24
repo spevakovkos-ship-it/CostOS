@@ -80,10 +80,10 @@ to enter into packages enter `costos_pkg` in normal mode
 counter - added a counter to call need range min-max time timeLiteral
 colorful_console - added a color console to call need color of the console
 fm20 - added a extended file manager to call need command args 
-
+```
 ### fm20 Commands
 | Command |     Arguments     | Description |
-|---|---|---|
+|--|--|--|
 |`reverse`|`<fileName>`|reverses a file
 |`find`|`<fileName>`|finds a file
 |`grep`|`<fileName> <text>`| grep text in a file
