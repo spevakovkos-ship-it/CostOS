@@ -30,6 +30,7 @@ class Shell {
         Rights right;
         std::unordered_map<string,void (Shell::*)(const Args&)> commands;
         std::unordered_map<string,void (*)(const Args&)> packageCommands;
+        std::unordered_map<string,Args> macroses;
         inline static const std::unordered_map<string,bool*> packages = {
             {"counter", &counterDownloaded},
             {"colorful_console",&colorful_consoleDownloaded},
@@ -66,6 +67,7 @@ class Shell {
                 {"colorful_console",&colorful_console},
                 {"fm20",&fm20}
             };
+            macroses = {};
             static const std::unordered_map<std::string,bool*> packages = {
                 {"counter",&counterDownloaded},
                 {"colorful_console",&colorful_consoleDownloaded},
@@ -123,6 +125,47 @@ class Shell {
             }
             std::cout << "\033["<<args[0] << "m";
         }
+        void SCcreateMacro(const Args& args) {
+            if (args.size() < 2) {
+                std::cout << "SYSTEM ERROR: SYSCALL CREATEMACRO NEED ARGUMENTS\n";
+                return;
+            }
+
+            string macroName = args[0];
+
+            if (args[1] == "syscall")
+                return;
+
+            std::vector<string> macroCommand(
+                args.begin() + 1,
+                args.end()
+            );
+
+            macroses[macroName] = macroCommand;
+        }
+        void SCexecuteMacro(const Args& args) {
+            if (args.empty()) {
+                std::cout << "SYSTEM ERROR: SYSCALL EXECUTEMACRO NEED A ARGUMENT\n";
+                return;
+            }
+
+            string macroName = args[0];
+
+            auto it = macroses.find(macroName);
+
+            if (it == macroses.end())
+                return;
+
+            string resCommand;
+
+            for (const auto& v : it->second) {
+                resCommand += v;
+                resCommand += " ";
+            }
+
+            this->switchCommand(resCommand);
+            this->executeCommand();
+        }
         void syscall(const Args& args) {
             if (right != Rights::SYSTEM) {
                 bios.logError("Permission denied");
@@ -133,7 +176,9 @@ class Shell {
             static const std::unordered_map<std::string,syscallCommands> commandsForsyscall = {
                 {"changeINPUT2",Shell::SCchangeINPUT2},
                 {"changeINPUT1",Shell::SCchangeINPUT1},
-                {"changeCOLOR",Shell::SCchangeColor}
+                {"changeCOLOR",Shell::SCchangeColor},
+                {"createMACRO",Shell::SCcreateMacro},
+                {"executeMACRO",Shell::SCexecuteMacro}
             };
             auto it = commandsForsyscall.find(args[0]);
             if (it != commandsForsyscall.end()) {

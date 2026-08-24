@@ -103,6 +103,8 @@ if you in system mode you can use syscall
 |`syscall changeINPUT1`| `<newInput>`| change a input 
 |`syscall changeINPUT2`| `<newInput>`| change a input 
 |`syscall changeCOLOR`| `<ANSIColorCode>`| change a color of terminal 
+|`syscall createMACRO`| `<name> <command>`| create a macro <name> than you can call 
+|`syscall executeMACRO`| `<name>`| call a macro
 
 ## File manager
 
