@@ -103,13 +103,29 @@ if you in system mode you can use syscall
 |`syscall changeINPUT1`| `<newInput>`| change a input 
 |`syscall changeINPUT2`| `<newInput>`| change a input 
 |`syscall changeCOLOR`| `<ANSIColorCode>`| change a color of terminal 
-|`syscall createMACRO`| `<name> <command>`| create a macro <name> than you can call 
+|`syscall createMACRO`| `<name> <command>`| create a macro <name> that you can call 
 |`syscall executeMACRO`| `<name>`| call a macro
 
+## Macro System 
+Cost os includes a built-in macro system 
+
+Example:
+```costos
+OS -User
+# createMacro greet hello, -arg
+OS -User
+# executeMacro greet me
+hello, me
+```
+### Macro system commands 
+| Command |     Arguments     | Description |
+|---|---|---|
+| `createMacro`| `<command>`| create a new macro, in command you can recieve user args for this on place where you want user args enter -arg
+| `executeMacro`| `<name> <args>`| execute macro with args
 ## File manager
 
 
-CostOS includes a build-in file manager for working with user files
+CostOS includes a built-in file manager for manage user data
 
 
 The file manager uses an argument parser.

@@ -14,6 +14,7 @@ enum class Rights {
 #include <thread>
 #include <chrono>
 #include <functional>
+#include <algorithm>
 
 #include "../modules/Errors_Table.hpp"
 #include "../pkg/counter/counter.hpp"
@@ -22,7 +23,13 @@ enum class Rights {
 #include "../pkg/colorful_console/colorful_console.hpp"
 #include "../pkg/fm20/fm20.hpp"
 using std::string;
+struct Macro {
+    string name;
+    
+    std::vector<string> args;
 
+
+};
 using namespace std::chrono_literals;
 class Shell {
     private:
@@ -30,7 +37,7 @@ class Shell {
         Rights right;
         std::unordered_map<string,void (Shell::*)(const Args&)> commands;
         std::unordered_map<string,void (*)(const Args&)> packageCommands;
-        std::unordered_map<string,Args> macroses;
+        std::vector<Macro> macroses;
         inline static const std::unordered_map<string,bool*> packages = {
             {"counter", &counterDownloaded},
             {"colorful_console",&colorful_consoleDownloaded},
@@ -132,9 +139,10 @@ class Shell {
                 std::cout << "SYSTEM ERROR: SYSCALL CREATEMACRO NEED ARGUMENTS\n";
                 return;
             }
+            Macro m;
 
-            string macroName = args[0];
-
+            m.name = args[0];
+            
             if (args[1] == "syscall")
                 return;
 
@@ -142,18 +150,19 @@ class Shell {
                 args.begin() + 1,
                 args.end()
             );
-
-            macroses[macroName] = macroCommand;
-        }
+            m.args = macroCommand;
+            macroses.push_back(m);
+        } 
         void createMacro(const Args& args) {
             if (args.size() < 2) {
                 bios.logError("createMacro need args");
                 addError("ShellCore","createMacro need args");
                 return;
             }
+            Macro m;
 
-            string macroName = args[0];
-
+            m.name = args[0];
+            
             if (args[1] == "syscall")
                 return;
 
@@ -161,8 +170,8 @@ class Shell {
                 args.begin() + 1,
                 args.end()
             );
-
-            macroses[macroName] = macroCommand;
+            m.args = macroCommand;
+            macroses.push_back(m);
         }
         void executeMacro(const Args& args) {
              if (args.size() < 1) {
@@ -171,44 +180,84 @@ class Shell {
                 return;
             }
             string macroName = args[0];
+            bool found = false;
+            Macro mac;
 
-            auto it = macroses.find(macroName);
+            for (const auto& m: macroses) {
+                if (m.name == macroName) {
+                    mac = m;
+                    found = true;
+                    break;
+                }
 
-            if (it == macroses.end())
-                return;
-
-            string resCommand;
-
-            for (const auto& v : it->second) {
-                resCommand += v;
-                resCommand += " ";
             }
+            if (found) {
+                string resCommand;
 
-            this->switchCommand(resCommand);
-            this->executeCommand();
+                int argIndex = 1;
+                
+                for (auto& v : mac.args) {
+                    if ((v.find("-arg")) != std::string::npos) {
+                        if (args.size() < argIndex) {
+                            bios.logError("Arguments size is not for all macro args");
+                            addError("ShellCore","Arguments size is not for all macro args");
+                            return;
+                        }
+                        v.replace(v.find("-arg"), 4, args[argIndex]);
+                        argIndex++;
+                    }
+                    resCommand += v;
+                    resCommand += " ";
+                }
+
+                this->switchCommand(resCommand);
+                this->executeCommand();
+            }   else {
+                bios.logError("Macro not found");
+                addError("ShellCore","Macro not found");
+            }
         }
         void SCexecuteMacro(const Args& args) {
             if (args.empty()) {
                 std::cout << "SYSTEM ERROR: SYSCALL EXECUTEMACRO NEED A ARGUMENT\n";
                 return;
             }
-
             string macroName = args[0];
+            bool found = false;
+            Macro mac;
 
-            auto it = macroses.find(macroName);
+            for (const auto& m: macroses) {
+                if (m.name == macroName) {
+                    mac = m;
+                    found = true;
+                    break;
+                }
 
-            if (it == macroses.end())
-                return;
-
-            string resCommand;
-
-            for (const auto& v : it->second) {
-                resCommand += v;
-                resCommand += " ";
             }
+            if (found) {
+                string resCommand;
+                int argIndex = 1;
+                for (auto& v : mac.args) {
+                    if ((v.find("-arg")) != std::string::npos) {
+                        if (args.size() < argIndex) {
+                            bios.logError("Arguments size is not for all macro args");
+                            addError("ShellCore","Arguments size is not for all macro args");
+                            return;
+                        }
+                        v.replace(v.find("-arg"), 4, args[argIndex]);
+                        argIndex++;
+                    } 
+                    resCommand += v;
+                    
+                    resCommand += " ";
+                }
 
-            this->switchCommand(resCommand);
-            this->executeCommand();
+                this->switchCommand(resCommand);
+                this->executeCommand();
+            } else {
+                std::cout << "SYSTEM ERROR: MACRO NOT FOUND\n";
+                
+            }
         }
         void syscall(const Args& args) {
             if (right != Rights::SYSTEM) {
