@@ -60,7 +60,9 @@ class Shell {
                 {"fm",&Shell::fm},
                 {"animate",&Shell::animateCmd},{"anim",&Shell::animateCmd},
                 {"costos_pkg",&Shell::costosPkg},
-                {"syscall",&Shell::syscall}
+                {"syscall",&Shell::syscall},
+                {"createMacro",&Shell::createMacro},
+                {"executeMacro",&Shell::executeMacro},
             };
             packageCommands = {
                 {"counter",&counter},
@@ -142,6 +144,48 @@ class Shell {
             );
 
             macroses[macroName] = macroCommand;
+        }
+        void createMacro(const Args& args) {
+            if (args.size() < 2) {
+                bios.logError("createMacro need args");
+                addError("ShellCore","createMacro need args");
+                return;
+            }
+
+            string macroName = args[0];
+
+            if (args[1] == "syscall")
+                return;
+
+            std::vector<string> macroCommand(
+                args.begin() + 1,
+                args.end()
+            );
+
+            macroses[macroName] = macroCommand;
+        }
+        void executeMacro(const Args& args) {
+             if (args.size() < 1) {
+                bios.logError("executeMacro need args");
+                addError("ShellCore","executeMacro need args");
+                return;
+            }
+            string macroName = args[0];
+
+            auto it = macroses.find(macroName);
+
+            if (it == macroses.end())
+                return;
+
+            string resCommand;
+
+            for (const auto& v : it->second) {
+                resCommand += v;
+                resCommand += " ";
+            }
+
+            this->switchCommand(resCommand);
+            this->executeCommand();
         }
         void SCexecuteMacro(const Args& args) {
             if (args.empty()) {
