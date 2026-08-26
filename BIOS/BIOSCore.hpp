@@ -32,6 +32,7 @@ class BIOS {
                     PATH = "CostOS/BIOS/Config.conf";
                     try {loadConfig(PATH);} catch (std::exception&) {
                         std::cout << "\nError loading Config.conf, Please ensure that you are in the project folder." << std::endl;
+                        std::terminate();   
                     }
                 }
                 addError("BIOS","Config corrupted used SB");
