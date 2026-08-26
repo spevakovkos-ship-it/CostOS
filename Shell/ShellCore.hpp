@@ -70,6 +70,7 @@ class Shell {
                 {"syscall",&Shell::syscall},
                 {"createMacro",&Shell::createMacro},
                 {"executeMacro",&Shell::executeMacro},
+                {"repeat",&Shell::repeat}
             };
             packageCommands = {
                 {"counter",&counter},
@@ -257,6 +258,25 @@ class Shell {
             } else {
                 std::cout << "SYSTEM ERROR: MACRO NOT FOUND\n";
                 
+            }
+        }
+        void repeat(const Args& args ){
+            if (args.size() <= 1) {
+                bios.logError("Repeat need args");
+                addError("ShellCore","Repeat need args");
+                return;
+            }
+            int count = std::stoi(args[0]);
+
+            string resCommand;
+
+            for (int i = 1;i < args.size();++i) {
+                resCommand += args[i];
+                resCommand += " ";
+            }
+            this->switchCommand(resCommand);
+            for (int i = 0;i < count;++i) {
+                this->executeCommand();
             }
         }
         void syscall(const Args& args) {
@@ -452,7 +472,7 @@ class Shell {
             errorsTableInterface(*this);    
         }
         void fmCreate(const Args&args) {
-            std::string path = std::format("UserData/{0}",args[0]);
+            std::string path = std::format("../UserData/{0}",args[0]);
             std::ofstream f(path);
 
             if (!f.is_open()) {

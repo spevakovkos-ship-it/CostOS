@@ -31,6 +31,7 @@ CostOS is a modular console-based system with a virtual BIOS, interactive Shell,
 | `fm` | `<command> <args for command1> ...` | Work with file manager
 | `anim` / `animate` | `<text>...` | Animates a text 
 | `costos_pkg` | `<command> <args for command1> ...` | Work with packages
+| `repeat` | `<count> <body>` | repeat the <body> <count> times
 ## Math Subshell
 
 The Math environment is a separate command interface launched with `mathMode`.
