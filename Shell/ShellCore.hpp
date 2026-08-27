@@ -69,8 +69,8 @@ class Shell {
                 {"costos_pkg",&Shell::costosPkg},
                 {"syscall",&Shell::syscall},
                 {"createMacro",&Shell::createMacro},
-                {"executeMacro",&Shell::executeMacro},
-                {"repeat",&Shell::repeat}
+                {"repeat",&Shell::repeat},
+                {"renameMacro",&Shell::renameMacro}
             };
             packageCommands = {
                 {"counter",&counter},
@@ -218,47 +218,38 @@ class Shell {
                 addError("ShellCore","Macro not found");
             }
         }
-        void SCexecuteMacro(const Args& args) {
+     
+        void SCrenameMacro(const Args& args) {
             if (args.empty()) {
-                std::cout << "SYSTEM ERROR: SYSCALL EXECUTEMACRO NEED A ARGUMENT\n";
+                std::cout << "SYSTEM ERROR: SYSCALL RENAMEMACRO NEED A ARGUMENT\n";
                 return;
             }
-            string macroName = args[0];
-            bool found = false;
-            Macro mac;
+            string oldName = args[0];
+            string newName = args[1];
 
-            for (const auto& m: macroses) {
-                if (m.name == macroName) {
-                    mac = m;
-                    found = true;
-                    break;
+            for (auto& m : macroses) {
+                if (m.name == oldName) {
+                    m.name = newName;
+                    break;  
                 }
-
+            } 
+        }
+        void renameMacro(const Args& args) {
+            if (args.size() < 2) {
+                bios.logError("renameMacro need args");
+                addError("ShellCore","renameMacro need args");
+                return;
             }
-            if (found) {
-                string resCommand;
-                int argIndex = 1;
-                for (auto& v : mac.args) {
-                    if ((v.find("-arg")) != std::string::npos) {
-                        if (args.size() < argIndex) {
-                            bios.logError("Arguments size is not for all macro args");
-                            addError("ShellCore","Arguments size is not for all macro args");
-                            return;
-                        }
-                        v.replace(v.find("-arg"), 4, args[argIndex]);
-                        argIndex++;
-                    } 
-                    resCommand += v;
-                    
-                    resCommand += " ";
+            
+            string oldName = args[0];
+            string newName = args[1];
+
+            for (auto& m : macroses) {
+                if (m.name == oldName) {
+                    m.name = newName;
+                    break;  
                 }
-
-                this->switchCommand(resCommand);
-                this->executeCommand();
-            } else {
-                std::cout << "SYSTEM ERROR: MACRO NOT FOUND\n";
-                
-            }
+            } 
         }
         void repeat(const Args& args ){
             if (args.size() <= 1) {
@@ -291,7 +282,8 @@ class Shell {
                 {"changeINPUT1",Shell::SCchangeINPUT1},
                 {"changeCOLOR",Shell::SCchangeColor},
                 {"createMACRO",Shell::SCcreateMacro},
-                {"executeMACRO",Shell::SCexecuteMacro}
+                {"renameMACRO",Shell::SCrenameMacro},
+                {"executeMACRO",Shell::executeMacro}
             };
             auto it = commandsForsyscall.find(args[0]);
             if (it != commandsForsyscall.end()) {
@@ -621,8 +613,27 @@ class Shell {
                 (this->*(it->second))(args);
             }
             else {
-                bios.logError("Unknown command");
-                addError("ShellCore","Unknown command");
+    
+                bool found = false;
+                Macro mac;
+                mac.args = args;
+                for (auto& m : macroses) {
+                    if (m.name == cmd) {
+                        found = true;
+                        mac.name = m.name;
+                    }
+                }
+                if (found) {
+                    Args macroFullCommand;
+                    macroFullCommand.push_back(mac.name);
+                    for (auto& arg : mac.args) {
+                        macroFullCommand.push_back(arg);
+                    }
+                    executeMacro(macroFullCommand);
+                } else {
+                    bios.logError("Unknown command");
+                    addError("ShellCore","Unknown command");
+                }
             }
         }
 };

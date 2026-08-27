@@ -122,7 +122,9 @@ hello, me
 | Command |     Arguments     | Description |
 |---|---|---|
 | `createMacro`| `<command>`| create a new macro, in command you can recieve user args for this on place where you want user args enter -arg
-| `executeMacro`| `<name> <args>`| execute macro with args
+| `<name>`| `<args>`| execute macro with args
+| `renameMacro`| `<oldName> <newName>`| rename macro <oldName> to <newName>
+
 ## File manager
 
 
@@ -325,7 +327,8 @@ CostOS/
 │   ├── Shell.hpp
 │   └── ShellCore.hpp
 │
-└── README.md
+├── README.md
+└── .gitignore
 ```
 
 ## Architecture
