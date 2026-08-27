@@ -115,7 +115,7 @@ Example:
 OS -User
 # createMacro greet hello, -arg
 OS -User
-# executeMacro greet me
+# greet me
 hello, me
 ```
 ### Macro system commands 
