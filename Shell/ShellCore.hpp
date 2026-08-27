@@ -313,22 +313,26 @@ class Shell {
             std::string packageName = args[0];
 
             auto it = packages.find(packageName);
-
+            if (*it->second == true) {
+                bios.logError("Package now installed");
+                addError("ShellCore","Package now installed");
+                return;
+            } 
             if (it != packages.end()) {
                 for (int i = 0;i < 100;i+=10) {
-                    std::cout << "\n[PackegesManager] Resolving promises " << i <<"...";
+                    std::cout << "\n[PackagesManager] Resolving promises " << i <<"...";
                     std::this_thread::sleep_for(500ms);
                 }
                 for (int i = 0;i < 100;i+=10) {
-                    std::cout << "\n[PackegesManager] Getting a premission from BIOS  " << i <<"...";
+                    std::cout << "\n[PackagesManager] Getting a premission from BIOS  " << i <<"...";
                     std::this_thread::sleep_for(100ms);
                 }
                 for (int i = 0;i < 100;i+=10) {
-                    std::cout << "\n[PackegesManager] Installing  " << i <<"...";
+                    std::cout << "\n[PackagesManager] Installing  " << i <<"...";
                     std::this_thread::sleep_for(750ms);
                 }
                 *it->second = true;
-                std::cout << "\n[PackegesManager] Done " << packageName <<" installed\n";
+                std::cout << "\n[PackagesManager] Done " << packageName <<" installed\n";
             }
         }
         void pkgCall(const Args& args) {
