@@ -468,12 +468,9 @@ class Shell {
             errorsTableInterface(*this);    
         }
         void fmCreate(const Args&args) {
-            std::string path = std::format("../UserData/{0}",args[0]);
-            std::ofstream f(path);
+            std::ofstream f("UserData/"+args[0]);
 
-            if (!f.is_open()) {
-                throw std::runtime_error("Error opening a file");
-            }
+            
             f.close();
         }
         void fmWrite(const Args& args) {
@@ -614,7 +611,13 @@ class Shell {
             auto it = commands.find(cmd);
 
             if (it != commands.end()) {
-                (this->*(it->second))(args);
+                try {
+                    (this->*(it->second))(args);
+                } catch (std::exception& err ){
+                    bios.logError(err.what());
+                    addError("ShellCore",err.what());
+                    return;
+                }
             }
             else {
     
