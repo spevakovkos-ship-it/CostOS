@@ -109,7 +109,7 @@ class BIOS {
                 std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
             }
             while (true) {
-                std::cout << std::boolalpha << "BIOS setting V1.0\nlogErrors:" << logErrors << "\nmathEnabled:" << mathEnabled << "\n# ";
+                std::cout << std::boolalpha << "\nBIOS setting V1.0\nlogErrors:" << logErrors << "\nmathEnabled:" << mathEnabled << "\n# ";
                 
                 static const std::unordered_map<std::string, BoolPtr> boolMap = {
                     {"mathEnabled", &BIOS::mathEnabled},
