@@ -411,22 +411,20 @@ cd CostOS
 
 ### Compile with GCC
 
-```bash
-g++ -std=c++23 CostOSBoot/OSBoot.cpp modules/math_module.cpp modules/Errors_Table.cpp pkg/counter/counter.cpp pkg/colorful_console/colorful_console.cpp pkg/fm20/fm20.cpp  -o CostOS.exe
-```
+enter `F7` on keyboard and CMake build the project
 
 ### Run
 
 ```bash
-./CostOS.exe
+./costos.exe
 ```
 ### Run with SYSTEM mode
 ```bash
-./CostOS.exe -tools 
+./costos.exe -tools 
 ```
 ### Run with skip a loading
 ```bash
-./CostOS.exe -skipLoading
+./costos.exe -skipLoading
 ```
 ## Current Status
 

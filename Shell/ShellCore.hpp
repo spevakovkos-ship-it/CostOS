@@ -468,7 +468,7 @@ class Shell {
             errorsTableInterface(*this);    
         }
         void fmCreate(const Args&args) {
-            std::ofstream f("UserData/"+args[0]);
+            std::ofstream f("UserData/"+args[0] + ".cost_text");
 
             
             f.close();

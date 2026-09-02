@@ -1,0 +1,3 @@
+C:\msys64\ucrt64\bin\cmake.exe -E rm -f CMakeFiles\costos.dir/objects.a
+C:\msys64\ucrt64\bin\ar.exe qc CMakeFiles\costos.dir/objects.a @CMakeFiles\costos.dir\objects1.rsp
+C:\msys64\ucrt64\bin\g++.exe -g -Wl,--whole-archive CMakeFiles\costos.dir/objects.a -Wl,--no-whole-archive -o C:\Users\admin\Desktop\C++\CostOS_CPP\costos.exe -Wl,--out-implib,libcostos.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\costos.dir\linkLibs.rsp

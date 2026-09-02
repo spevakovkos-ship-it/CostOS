@@ -1,0 +1,38 @@
+[
+{
+  "directory": "C:/Users/admin/Desktop/C++/CostOS_CPP/build",
+  "command": "C:\\msys64\\ucrt64\\bin\\g++.exe   -g -std=gnu++23 -o CMakeFiles\\costos.dir\\pkg\\fm20\\fm20.cpp.obj -c C:\\Users\\admin\\Desktop\\C++\\CostOS_CPP\\pkg\\fm20\\fm20.cpp",
+  "file": "C:/Users/admin/Desktop/C++/CostOS_CPP/pkg/fm20/fm20.cpp",
+  "output": "CMakeFiles/costos.dir/pkg/fm20/fm20.cpp.obj"
+},
+{
+  "directory": "C:/Users/admin/Desktop/C++/CostOS_CPP/build",
+  "command": "C:\\msys64\\ucrt64\\bin\\g++.exe   -g -std=gnu++23 -o CMakeFiles\\costos.dir\\pkg\\counter\\counter.cpp.obj -c C:\\Users\\admin\\Desktop\\C++\\CostOS_CPP\\pkg\\counter\\counter.cpp",
+  "file": "C:/Users/admin/Desktop/C++/CostOS_CPP/pkg/counter/counter.cpp",
+  "output": "CMakeFiles/costos.dir/pkg/counter/counter.cpp.obj"
+},
+{
+  "directory": "C:/Users/admin/Desktop/C++/CostOS_CPP/build",
+  "command": "C:\\msys64\\ucrt64\\bin\\g++.exe   -g -std=gnu++23 -o CMakeFiles\\costos.dir\\pkg\\colorful_console\\colorful_console.cpp.obj -c C:\\Users\\admin\\Desktop\\C++\\CostOS_CPP\\pkg\\colorful_console\\colorful_console.cpp",
+  "file": "C:/Users/admin/Desktop/C++/CostOS_CPP/pkg/colorful_console/colorful_console.cpp",
+  "output": "CMakeFiles/costos.dir/pkg/colorful_console/colorful_console.cpp.obj"
+},
+{
+  "directory": "C:/Users/admin/Desktop/C++/CostOS_CPP/build",
+  "command": "C:\\msys64\\ucrt64\\bin\\g++.exe   -g -std=gnu++23 -o CMakeFiles\\costos.dir\\modules\\math_module.cpp.obj -c C:\\Users\\admin\\Desktop\\C++\\CostOS_CPP\\modules\\math_module.cpp",
+  "file": "C:/Users/admin/Desktop/C++/CostOS_CPP/modules/math_module.cpp",
+  "output": "CMakeFiles/costos.dir/modules/math_module.cpp.obj"
+},
+{
+  "directory": "C:/Users/admin/Desktop/C++/CostOS_CPP/build",
+  "command": "C:\\msys64\\ucrt64\\bin\\g++.exe   -g -std=gnu++23 -o CMakeFiles\\costos.dir\\modules\\Errors_Table.cpp.obj -c C:\\Users\\admin\\Desktop\\C++\\CostOS_CPP\\modules\\Errors_Table.cpp",
+  "file": "C:/Users/admin/Desktop/C++/CostOS_CPP/modules/Errors_Table.cpp",
+  "output": "CMakeFiles/costos.dir/modules/Errors_Table.cpp.obj"
+},
+{
+  "directory": "C:/Users/admin/Desktop/C++/CostOS_CPP/build",
+  "command": "C:\\msys64\\ucrt64\\bin\\g++.exe   -g -std=gnu++23 -o CMakeFiles\\costos.dir\\CostOSBoot\\OSBoot.cpp.obj -c C:\\Users\\admin\\Desktop\\C++\\CostOS_CPP\\CostOSBoot\\OSBoot.cpp",
+  "file": "C:/Users/admin/Desktop/C++/CostOS_CPP/CostOSBoot/OSBoot.cpp",
+  "output": "CMakeFiles/costos.dir/CostOSBoot/OSBoot.cpp.obj"
+}
+]

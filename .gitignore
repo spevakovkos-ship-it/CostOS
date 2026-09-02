@@ -3,4 +3,5 @@
 !*.*
 !*/
 *.exe
-*.txt   
+*.cost_text
+!Makefile
