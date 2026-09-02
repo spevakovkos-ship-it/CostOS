@@ -251,7 +251,7 @@ class Shell {
                 }
             } 
         }
-        void repeat(const Args& args ){
+        void repeat(const Args& args ){ 
             if (args.size() <= 1) {
                 bios.logError("Repeat need args");
                 addError("ShellCore","Repeat need args");
@@ -468,33 +468,52 @@ class Shell {
             errorsTableInterface(*this);    
         }
         void fmCreate(const Args&args) {
-            std::ofstream f("UserData/"+args[0] + ".cost_text");
+            std::string name;
+            if (args.empty()) name = "NoName" ;
+            else {
+                for (const auto& v : args) {
+                    name.append(v);
+                }
+            }
+            std::ofstream f("UserData/"+ name + ".cost_text");
 
             
             f.close();
         }
         void fmWrite(const Args& args) {
-            std::string path = std::format("UserData/{}", args[0]);
-
-            std::ofstream f(path,std::ios_base::app);
+            if (args.empty()) {
+                bios.logError("usage: <fileName> <text>");
+                addError("ShellCore","usage: <fileName> <text>");
+                return;         
+            }
+            std::string path = std::format("UserData/{}",args[0] + ".cost_text");
+            std::ofstream f(path, std::ios_base::app);
 
             if (!f.is_open()) {
-                throw std::runtime_error("Error opening a file");
-            }
+                 throw std::runtime_error("Error opening a file");
+             } 
 
-        for (size_t i = 1; i < args.size(); ++i) {
-            if (i > 1)
-                f << ' ';
-
-            f << args[i];
+            for (size_t i = 1; i < args.size(); ++i) {
+                if (i > 1) {
+                    f << ' ';
+                }
+                f << args[i];
             }
-             f << '\n'; 
+            
+            f << '\n';   
         }
         ~Shell() {
             std::cout << "\033[0m";
         }
         void fmRead(const Args& args) {
-            std::string path = std::format("UserData/{}", args[0]);
+            std::string name;
+            if (args.empty()) name = "NoName";
+            else {
+                for (const auto& v : args) {
+                    name.append(v);
+                }
+            }
+            std::string path = std::format("UserData/{}", name + ".cost_text");
 
             std::ifstream f(path);
 
@@ -507,12 +526,8 @@ class Shell {
             }
         }
         void fmRemove(const Args& args) {
-           if (args.empty()) {
-                bios.logError("Fm remove need args");
-                addError("File manager","Fm remove need args");
-
-           }
-            std::filesystem::path path = std::format("UserData/{}", args[0]);
+            std::string name = args[0];
+            std::filesystem::path path = std::format("UserData/{}", name + ".cost_text");
             try {
                 if (std::filesystem::remove(path)) {
                     std::cout << "File " << path << " deleted" << std::endl;
@@ -583,7 +598,7 @@ class Shell {
                 std::string line;
                 for (int i = 1;i < args.size();i++) {
                      if (i > 1)
-                        line += ' ';
+                        line += ' ';  
 
                     line.append(args[i]);
                 }

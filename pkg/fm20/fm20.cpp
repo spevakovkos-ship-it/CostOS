@@ -19,7 +19,7 @@
 void wc_fn(const std::vector<std::string>& args){
     if (!fm20Downloaded) return;
     const std::string fileName = args[0];
-    std::string path = std::format("UserData/{0}",fileName);
+    std::string path = std::format("UserData/{0}",fileName + ".cost_text");
 
     std::ifstream f(path);
 
@@ -62,7 +62,7 @@ void grep_fn(const std::vector<std::string>& args) {
 
     std::string fileName = args[0];
     std::string text = args[1];
-    std::ifstream file("UserData/" + fileName);
+    std::ifstream file("UserData/" + fileName + ".cost_text");
 
     std::string line;
 
@@ -76,7 +76,7 @@ void reverse_fn(const std::vector<std::string>& args){
     if (!fm20Downloaded) return;
 
     std::string fileName = args[0];
-    std::ifstream file("UserData/" + fileName);
+    std::ifstream file("UserData/" + fileName + ".cost_text");
 
    
 
@@ -95,7 +95,7 @@ void head_fn(const std::vector<std::string>& args) {
 
     std::string fileName = args[0];
     int count = std::stoi(args[1]); 
-    std::ifstream file("UserData/" + fileName);
+    std::ifstream file("UserData/" + fileName + ".cost_text");
 
     if (!file) return;
     int line = 0;
@@ -110,7 +110,7 @@ void tail_fn(const std::vector<std::string>& args) {
 
     std::string fileName = args[0];
     int count = std::stoi(args[1]); 
-    std::ifstream file("UserData/" + fileName);
+    std::ifstream file("UserData/" + fileName + ".cost_text");
 
     if (!file) {
         return;
