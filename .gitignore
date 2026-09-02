@@ -4,4 +4,5 @@
 !*/
 *.exe
 *.cost_text
-!Makefile
+!Makefile 
+build/

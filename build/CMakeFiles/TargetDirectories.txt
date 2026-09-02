@@ -1,7 +1,0 @@
-C:/Users/admin/Desktop/C++/CostOS_CPP/build/CMakeFiles/costos.dir
-C:/Users/admin/Desktop/C++/CostOS_CPP/build/CMakeFiles/edit_cache.dir
-C:/Users/admin/Desktop/C++/CostOS_CPP/build/CMakeFiles/rebuild_cache.dir
-C:/Users/admin/Desktop/C++/CostOS_CPP/build/CMakeFiles/list_install_components.dir
-C:/Users/admin/Desktop/C++/CostOS_CPP/build/CMakeFiles/install.dir
-C:/Users/admin/Desktop/C++/CostOS_CPP/build/CMakeFiles/install/local.dir
-C:/Users/admin/Desktop/C++/CostOS_CPP/build/CMakeFiles/install/strip.dir
