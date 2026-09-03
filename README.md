@@ -19,6 +19,7 @@ CostOS is a modular console-based system with a virtual BIOS, interactive Shell,
 - C++23
 - Build-in File Manager
 - Packages system
+- Macro system
 ## Core Shell Commands
 
 | Command | Arguments | Description |
@@ -32,6 +33,8 @@ CostOS is a modular console-based system with a virtual BIOS, interactive Shell,
 | `anim` / `animate` | `<text>...` | Animates a text 
 | `costos_pkg` | `<command> <args for command1> ...` | Work with packages
 | `repeat` | `<count> <body>` | repeat the <body> <count> times
+| `history` | - | Get the history of commands
+
 ## Math Subshell
 
 The Math environment is a separate command interface launched with `mathMode`.
@@ -134,7 +137,6 @@ Error: Package now installed
 |`grep`|`<fileName> <text>`| grep text in a file
 |`head`|`<fileName> <count>`|get a first count lines in a file
 |`tail`|`<fileName> <count>`|get a last count lines in a file
-|`head`|`<fileName> <count>`|get a first count lines in a file
 |`wc`|`<fileName>`|get info of file
 
 ## SYSTEM mode

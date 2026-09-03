@@ -4,6 +4,10 @@ enum class Rights {
     ROOT,
     SYSTEM
 };
+struct historyCommand {
+    std::string cmd;
+    std::vector<std::string> args;
+};
 #include <sstream>
 #include <string>
 #include <format>
@@ -43,6 +47,7 @@ class Shell {
             {"colorful_console",&colorful_consoleDownloaded},
             {"fm20",&fm20Downloaded}
         };
+        std::vector<historyCommand> history;
     public:
         BIOS bios;
         string INPUT1 = "OS -";
@@ -70,7 +75,8 @@ class Shell {
                 {"syscall",&Shell::syscall},
                 {"createMacro",&Shell::createMacro},
                 {"repeat",&Shell::repeat},
-                {"renameMacro",&Shell::renameMacro}
+                {"renameMacro",&Shell::renameMacro},
+                {"history",&Shell::history_fn}
             };
             packageCommands = {
                 {"counter",&counter},
@@ -101,17 +107,15 @@ class Shell {
             std::system("clear");
             #endif
         }
-
         void print(const Args& args) {
             if (args.empty()) {
                 bios.logError("Print require args");
                 addError("ShellCore","Print require args");
                 return;
             }
-            for (const auto& printValue : args) {
-                std::cout << printValue << " ";
+            for (const auto& v : args) {
+                std::cout << v << " ";
             }
-
             std::cout << "\n";
         }
         void SCchangeINPUT2(const Args& args) {
@@ -610,6 +614,15 @@ class Shell {
                 (this->*(it->second))(argsForCmd);
             }
         }        
+        void history_fn(const Args& args){
+            for (const auto& v : history) {
+                std::cout << v.cmd << " ";
+                for (const auto& vv : v.args) {
+                    std::cout << vv << " ";
+                }
+                std::cout << std::endl;
+            }
+        }
         void executeCommand() {
             std::istringstream iss(command);
             std::string cmd;
@@ -628,6 +641,11 @@ class Shell {
             if (it != commands.end()) {
                 try {
                     (this->*(it->second))(args);
+                    historyCommand hc;
+                    hc.args = args;
+                    hc.cmd = cmd;          
+                    history.push_back(hc);
+
                 } catch (std::exception& err ){
                     bios.logError(err.what());
                     addError("ShellCore",err.what());
@@ -648,7 +666,7 @@ class Shell {
                 if (found) {
                     Args macroFullCommand;
                     macroFullCommand.push_back(mac.name);
-                    for (auto& arg : mac.args) {
+                    for (auto& arg : mac.args) {                     
                         macroFullCommand.push_back(arg);
                     }
                     executeMacro(macroFullCommand);
@@ -657,6 +675,7 @@ class Shell {
                     addError("ShellCore","Unknown command");
                 }
             }
+            
         }
 };
 
