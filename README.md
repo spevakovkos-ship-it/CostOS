@@ -34,6 +34,7 @@ CostOS is a modular console-based system with a virtual BIOS, interactive Shell,
 | `costos_pkg` | `<command> <args for command1> ...` | Work with packages
 | `repeat` | `<count> <body>` | repeat the <body> <count> times
 | `history` | - | Get the history of commands
+| `clear` | `-history`| clear a history
 
 ## Math Subshell
 

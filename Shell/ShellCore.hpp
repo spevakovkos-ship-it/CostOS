@@ -48,6 +48,7 @@ class Shell {
             {"fm20",&fm20Downloaded}
         };
         std::vector<historyCommand> history;
+        bool ignoreHistoryCmd = false;
     public:
         BIOS bios;
         string INPUT1 = "OS -";
@@ -96,9 +97,13 @@ class Shell {
         }
         void clear(const Args& args) {
             if (!args.empty()) {
-                bios.logError("Clear not need args");
-                addError("ShellCore","Clear not need args");
-
+                if (args[0] == "-history") {
+                    history.clear();
+                    ignoreHistoryCmd = true;
+                } else {
+                    bios.logError("Clear not need args");
+                    addError("ShellCore","Clear not need args");
+                }
                 return;
             }   
             #ifdef _WIN32
@@ -641,10 +646,14 @@ class Shell {
             if (it != commands.end()) {
                 try {
                     (this->*(it->second))(args);
-                    historyCommand hc;
-                    hc.args = args;
-                    hc.cmd = cmd;          
-                    history.push_back(hc);
+                    if (ignoreHistoryCmd) {
+                        ignoreHistoryCmd = false;
+                    } else {
+                        historyCommand hc;
+                        hc.args = args;
+                        hc.cmd = cmd;          
+                        history.push_back(hc);
+                    }
 
                 } catch (std::exception& err ){
                     bios.logError(err.what());
