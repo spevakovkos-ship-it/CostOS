@@ -344,25 +344,28 @@ class Shell {
                 addError("ShellCore","Package name required");
                 return;
             }
-
-            std::string packageName = args[0];
-
+            string option;
+            if (args.size() > 1) option = args[1];
+            string packageName = args[0];
+            
             auto it = packages.find(packageName);
             if (*it->second == true) {
                 bios.logError("Package now installed");
                 addError("ShellCore","Package now installed");
                 return;
             } 
+            int dur = 10;
             if (it != packages.end()) {
-                for (int i = 0;i < 100;i+=10) {
+                if (option == "--force" || option == "--f") dur = 20;
+                for (int i = 0;i < 100+dur;i+=dur) {
                     std::cout << "\n[PackagesManager] Resolving promises " << i <<"...";
                     std::this_thread::sleep_for(500ms);
                 }
-                for (int i = 0;i < 100;i+=10) {
+                for (int i = 0;i < 100+dur;i+=dur) {
                     std::cout << "\n[PackagesManager] Getting a premission from BIOS  " << i <<"...";
                     std::this_thread::sleep_for(100ms);
                 }
-                for (int i = 0;i < 100;i+=10) {
+                for (int i = 0;i < 100+dur;i+=dur) {
                     std::cout << "\n[PackagesManager] Installing  " << i <<"...";
                     std::this_thread::sleep_for(750ms);
                 }
@@ -398,20 +401,23 @@ class Shell {
                 addError("ShellCore","PKG remove need arguments");
                 return;
             }
+            string option;
+            if (args.size() > 1) option = args[1];
             string name = args[0];
 
             auto it = packages.find(name);
-
+            int dur = 10;
             if (it != packages.end()) {
-                for (int i = 0;i < 100;i+=10) {
+                if (option == "--force" || option == "--f") dur = 20;
+                for (int i = 0;i < 100+dur;i+=dur) {
                     std::cout << "\n[PackagesManager] DeResolving promises " << i <<"...";
                     std::this_thread::sleep_for(500ms);
                 }
-                for (int i = 0;i < 100;i+=10) {
+                for (int i = 0;i < 100+dur;i+=dur) {
                     std::cout << "\n[PackagesManager] Getting a premission from BIOS  " << i <<"...";
                     std::this_thread::sleep_for(100ms);
                 }
-                for (int i = 0;i < 100;i+=10) {
+                for (int i = 0;i < 100+dur;i+=dur) {
                     std::cout << "\n[PackagesManager] Removeing " << i <<"...";
                     std::this_thread::sleep_for(750ms);
                 }

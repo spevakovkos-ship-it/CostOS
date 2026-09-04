@@ -11,6 +11,7 @@ void counter(const Args& args) {
     int time = stoi(rawTime);
     string rawTimeLit = args[2];
     char timeLit = rawTimeLit.at(0);
+
     size_t colonPos = range.find('-');
     int max,min;
     if (colonPos != string::npos) {
@@ -30,6 +31,9 @@ void counter(const Args& args) {
         break;
         case 'm':
             this_thread::sleep_for(chrono::milliseconds(time));
+        break;
+        case 'n':
+            this_thread::sleep_for(chrono::nanoseconds(time));
         break;
         }
     }

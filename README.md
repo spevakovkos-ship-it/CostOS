@@ -78,11 +78,16 @@ to enter into packages enter `costos_pkg` in normal mode
 |---|---|---|
 |`costos_pkg`| `<command> <args1> ...` | Call a pkg-commands
 |`costos_pkg install ` | `<pkg name>`| install a new package
+|`costos_pkg install ` | `<pkg name> --force ` | install a new package x2 speed
+|`costos_pkg install ` | `<pkg name> -f ` | install a new package x2 speed
+
+
 |`costos_pkg remove ` | `<pkg name>`| remove a package
 |`costos_pkg call` | `<pkg name> <args>` | call a package with args
 ### avalible packages
 ```
 counter - added a counter to call need range min-max time timeLiteral
+timeLiterals in counter: n - nanoseconds s - seconds m - milliseconds
 colorful_console - added a color console to call need color of the console
 fm20 - added a extended file manager to call need command args 
 ```
