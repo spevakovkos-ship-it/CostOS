@@ -164,6 +164,14 @@ OS -User
 OS -User
 # greet me
 hello, me
+OS -User
+# createMacro p print -allarg
+OS -User
+# p hello
+hello
+OS -User
+# p hello world 
+hello world
 ```
 ### Macro system commands 
 | Command |     Arguments     | Description |

@@ -204,10 +204,11 @@ class Shell {
             if (found) {
                 string resCommand;
 
-                int argIndex = 1;
-                
+                int argIndex = 1,argIndex2 = 1;
+                bool allArg = false;
                 for (auto& v : mac.args) {
                     if ((v.find("-arg")) != std::string::npos) {
+                        if (allArg) break;
                         if (args.size() < argIndex) {
                             bios.logError("Arguments size is not for all macro args");
                             addError("ShellCore","Arguments size is not for all macro args");
@@ -215,7 +216,32 @@ class Shell {
                         }
                         v.replace(v.find("-arg"), 4, args[argIndex]);
                         argIndex++;
-                    }
+                    }  else if (v.find("-allarg") != std::string::npos) {
+                        if (allArg) {
+                            break;
+                        }
+                        
+                        if (args.size() < 2) { 
+                            bios.logError("Arguments size is not for all macro args");
+                            addError("ShellCore", "Arguments size is not for all macro args");
+                            return;
+                        }   
+
+                        std::size_t pos = v.find("-allarg");
+                        if (pos != std::string::npos) {
+                            std::string allArgsStr = "";
+                            
+                            for (size_t i = 1; i < args.size(); ++i) {
+                                allArgsStr += args[i];
+                                if (i < args.size() - 1) {
+                                    allArgsStr += " ";
+                                }
+                            }
+
+                            v.replace(pos, 7, allArgsStr);
+                            allArg = true;
+                        }
+                    }           
                     resCommand += v;
                     resCommand += " ";
                 }
