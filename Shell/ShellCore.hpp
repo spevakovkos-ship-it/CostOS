@@ -39,6 +39,10 @@ class Shell {
     private:
         string command;
         Rights right;
+        const int VERSIONPART1 = 1;
+        const int VERSIONPART2 = 0;
+        const int VERSIONPART3 = 0;
+
         std::unordered_map<string,void (Shell::*)(const Args&)> commands;
         std::unordered_map<string,void (*)(const Args&)> packageCommands;
         std::vector<Macro> macroses;
@@ -77,7 +81,9 @@ class Shell {
                 {"createMacro",&Shell::createMacro},
                 {"repeat",&Shell::repeat},
                 {"renameMacro",&Shell::renameMacro},
-                {"history",&Shell::history_fn}
+                {"history",&Shell::history_fn},
+                {"help",&Shell::help},
+                {"ver",&Shell::version},{"version",&Shell::version}
             };
             packageCommands = {
                 {"counter",&counter},
@@ -305,6 +311,23 @@ class Shell {
                 this->executeCommand();
             }
         }
+        void help(const Args& args) {
+            std::cout <<  "| Command | Arguments | Description |\n";
+            std::cout <<  "|---|---|---|\n";
+            std::cout <<  "| `clear` | - | Clears the terminal screen. \n";
+            std::cout <<  "| `print` | `<text1> [text2] ...` | Prints one or more arguments. |\n";
+            std::cout <<  "| `colorPrint` | `<Color> <text> ...` | Prints text using ANSI colors. |\n";
+            std::cout <<  "| `mathMode` | - | Opens the Math subshell. |\n";
+            std::cout <<  "| `errorsTable` | - | Opens the Errors Table. |\n";
+            std::cout <<  "| `fm` | `<command> <args for command1> ...` | Work with file manager\n";
+            std::cout <<  "| `anim` / `animate` | `<text>...` | Animates a text \n";
+            std::cout <<  "| `costos_pkg` | `<command> <args for command1> ...` | Work with packages\n";
+            std::cout <<  "| `repeat` | `<count> <body>` | repeat the <body> <count> times\n";
+            std::cout <<  "| `history` | - | Get the history of commands\n";
+            std::cout <<  "| `clear` | `-history`| clear a history\n";
+            std::cout <<  "| `q` / `exit` / `quit` | - | exit \n"; 
+            std::cout <<  "| `ver` / `version` | - | get a version of CostOS \n"; 
+        }
         void syscall(const Args& args) {
             if (right != Rights::SYSTEM) {
                 bios.logError("Permission denied");
@@ -424,6 +447,9 @@ class Shell {
                 *it->second = false;
                 std::cout << "\n[PackagesManager] Done " << name <<" removed\n";
             }
+        }
+        void version(const Args& args) {
+            std::cout << VERSIONPART1 << "." << VERSIONPART2 << "." << VERSIONPART3 << std::endl;   
         }
         void costosPkg(const Args& args) {
             using pkgCommand = void(Shell::*)(const Args& args);

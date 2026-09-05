@@ -20,3 +20,5 @@ void mathClear();
 
 void generateRandomIntCin();
 int generateRandomInt(int min,int max);
+
+void help();

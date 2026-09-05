@@ -1,4 +1,4 @@
-# CostOS cpp
+# CostOS cpp V1.0.0
 
 A hobbyist CLI operating system emulator written in C++.
 
@@ -35,6 +35,8 @@ CostOS is a modular console-based system with a virtual BIOS, interactive Shell,
 | `repeat` | `<count> <body>` | repeat the <body> <count> times
 | `history` | - | Get the history of commands
 | `clear` | `-history`| clear a history
+| `help` | - | help
+| `ver` / `version` | - | get a version of CostOS 
 
 ## Math Subshell
 
@@ -48,6 +50,7 @@ The Math environment is a separate command interface launched with `mathMode`.
 | `avg` / `average` | — | Calculates the average of entered integers. |
 | `clear` | — | Clears the Math terminal. |
 | `exit` / `q` / `quit` | — | Returns to the main OS Shell. |
+| `help` | - | help
 
 Example:
 
