@@ -116,7 +116,7 @@ void help() {
 }
 void mathInterface(Shell& shell)  {
     using command = void(*)(void);
-
+    std::string prevInput = shell.INPUT1;
     shell.INPUT1 = "Math -";
 
     static const std::unordered_map<std::string,command> mathCommands = {
@@ -136,13 +136,13 @@ void mathInterface(Shell& shell)  {
         std::getline(std::cin,cmd);
 
         if (cmd == "exit" || cmd == "q" || cmd == "quit" || cmd == "Exit" ) {
-            shell.INPUT1 = "OS -";
+            shell.INPUT1 = prevInput;
 
             return;
         }
-
+        
         auto it = mathCommands.find(cmd);
-
+        
         if (it != mathCommands.end()) {
             try {
                 it->second();

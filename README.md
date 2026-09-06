@@ -1,4 +1,4 @@
-# CostOS cpp V1.0.1
+# CostOS cpp V1.1.1
  
  A hobbyist CLI operating system emulator written in C++.
 
@@ -20,11 +20,11 @@ CostOS is a modular console-based system with a virtual BIOS, interactive Shell,
 - Build-in File Manager
 - Packages system
 - Macro system
+- Scripting system
+## V1.1.1 Update List
+- Updated mathMode now INPUT1 saves 
+- Added a Scripting system
 
-## V1.0.1 Update List
-- Updated `version` command output by text `CostOS`
-- Updated `help` command output by ANSI colors in mathMode and OS mode 
-- Added a `deleteMacro` command 
 ## Core Shell Commands
 
 | Command | Arguments | Description |
@@ -42,7 +42,28 @@ CostOS is a modular console-based system with a virtual BIOS, interactive Shell,
 | `clear` | `-history`| clear a history
 | `help` | - | help
 | `ver` / `version` | - | get a version of CostOS 
+| `COSMode` / `CostOSScriptMode` | - | Opens the scripting subshell
 
+
+## Scripting subshell
+The script environment is a separate command interface launched with `COSMode` or `CostOSScriptMode`.
+
+| Command | Arguments | Description |
+|---|---|---|
+|`create` | `<name of file>` | Creates a file in folder Scripting that store you script
+|`run` | `<name of file>` | Run the script
+
+Example: 
+```text 
+OS -User
+# COSMode
+CostOSScript -User
+# create myScript
+CostOSScript -User
+# run myScript
+hi 
+
+```
 ## Math Subshell
 
 The Math environment is a separate command interface launched with `mathMode`.
@@ -390,8 +411,10 @@ CostOS/
 │   ├── Errors_Table.cpp
 │   ├── Errors_Table.hpp
 │   ├── math_module.cpp
-│   └── math_module.hpp
-│
+│   ├── math_module.hpp
+│   └── CostOSScript/
+│       ├── .cpp and .hpp
+│       └── Scripts/
 ├── Shell/
 │   ├── Shell.hpp
 │   └── ShellCore.hpp
@@ -409,10 +432,9 @@ CostOS/
               |             |             |
              BIOS          Shell        Modules
               |             |             |
-        Config.conf         |       +-----+-----+
-                            |       |           |
-                         Commands   Math    Errors Table
-                            |
+        Config.conf         |       +-----+-----+------------+
+                            |       |           |            |
+                         Commands   Math    Errors Table     CostOSScripts                      
                      USER / ROOT / SYSTEM
 ```
 
@@ -453,4 +475,4 @@ enter `F7` on keyboard and CMake build the project
 ```
 ## Current Status
 
-CostOS is an ongoing hobby project focused on C++ development, modular architecture, CLI systems, BIOS simulation, configuration management, command dispatching, and runtime error management.
+CostOS is an ongoing hobby project focused on C++ development, modular architecture, CLI systems, BIOS simulation, configuration management, command dispatching, Scripting system ,Macro system and runtime error management.

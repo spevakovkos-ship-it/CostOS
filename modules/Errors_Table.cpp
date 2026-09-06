@@ -15,6 +15,7 @@ void getErrors() {
     }
 } 
 void errorsTableInterface(Shell&shell) {
+    std::string prevInput = shell.INPUT1;
     shell.INPUT1 = "ErrorsTable -";
         
     while (true) {
@@ -25,7 +26,7 @@ void errorsTableInterface(Shell&shell) {
 
         if (cmd == "getErrors") getErrors();
         else if (cmd == "q" || cmd == "quit" || cmd == "exit") {
-            shell.INPUT1 = "OS -";
+            shell.INPUT1 = prevInput;
             return;
         }
         else std::cout << "Unknown command\n";

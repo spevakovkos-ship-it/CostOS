@@ -101,7 +101,7 @@ class BIOS {
                 return; 
             }
             std::cout << "Error: " << err << std::endl; 
-        } 
+        }   
         void BIOSInterface() {
             std::cin.clear();
     

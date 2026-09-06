@@ -26,6 +26,7 @@ struct historyCommand {
 #include "../BIOS/BIOSCore.hpp"
 #include "../pkg/colorful_console/colorful_console.hpp"
 #include "../pkg/fm20/fm20.hpp"
+#include "../modules/CostOSScript/CostOSScript.hpp"
 using std::string;
 struct Macro {
     string name;
@@ -40,7 +41,7 @@ class Shell {
         string command;
         Rights right;
         const int VERSIONPART1 = 1;
-        const int VERSIONPART2 = 0;
+        const int VERSIONPART2 = 1;
         const int VERSIONPART3 = 1;
 
         std::unordered_map<string,void (Shell::*)(const Args&)> commands;
@@ -84,7 +85,8 @@ class Shell {
                 {"history",&Shell::history_fn},
                 {"help",&Shell::help},
                 {"ver",&Shell::version},{"version",&Shell::version},
-                {"deleteMacro",&Shell::deleteMacro}
+                {"deleteMacro",&Shell::deleteMacro},
+                {"CostOSScriptMode",&Shell::scriptMode},{"COSMode",&Shell::scriptMode},
             };
             packageCommands = {
                 {"counter",&counter},
@@ -705,6 +707,9 @@ class Shell {
                 std::cout << std::endl;
             }
         }
+        void scriptMode(const Args& args) {
+            CostOSScript(*this);
+        }
         void executeCommand() {
             std::istringstream iss(command);
             std::string cmd;
@@ -758,6 +763,62 @@ class Shell {
                     executeMacro(macroFullCommand);
                 } else {
                     bios.logError("Unknown command");
+                    addError("ShellCore","Unknown command");
+                }
+            }
+            
+        }
+        void executeCommandWithoutLogs() {
+            std::istringstream iss(command);
+            std::string cmd;
+            Args args;
+            
+            iss >> cmd;
+
+            string arg;
+            
+            while (iss >> arg) 
+                args.push_back(arg);
+
+        
+            auto it = commands.find(cmd);
+
+            if (it != commands.end()) {
+                try {
+                    (this->*(it->second))(args);
+                    if (ignoreHistoryCmd) {
+                        ignoreHistoryCmd = false;
+                    } else {
+                        historyCommand hc;
+                        hc.args = args;
+                        hc.cmd = cmd;          
+                        history.push_back(hc);
+                    }
+
+                } catch (std::exception& err ){
+                    addError("ShellCore",err.what());
+                    return;
+                }
+            }
+            else {
+    
+                bool found = false;
+                Macro mac;
+                mac.args = args;
+                for (auto& m : macroses) {
+                    if (m.name == cmd) {
+                        found = true;
+                        mac.name = m.name;
+                    }
+                }
+                if (found) {
+                    Args macroFullCommand;
+                    macroFullCommand.push_back(mac.name);
+                    for (auto& arg : mac.args) {                     
+                        macroFullCommand.push_back(arg);
+                    }
+                    executeMacro(macroFullCommand);
+                } else {
                     addError("ShellCore","Unknown command");
                 }
             }
