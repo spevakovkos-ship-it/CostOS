@@ -24,6 +24,7 @@ CostOS is a modular console-based system with a virtual BIOS, interactive Shell,
 ## V1.0.1 Update List
 - Updated `version` command output by text `CostOS`
 - Updated `help` command output by ANSI colors in mathMode and OS mode 
+- Added a `deleteMacro` command 
 ## Core Shell Commands
 
 | Command | Arguments | Description |
