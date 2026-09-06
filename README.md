@@ -187,7 +187,7 @@ hello world
 | `createMacro`| `<command>`| create a new macro, in command you can recieve user args for this on place where you want user args enter -arg
 | `<name>`| `<args>`| execute macro with args
 | `renameMacro`| `<oldName> <newName>`| rename macro <oldName> to <newName>
-
+| `deleteMacro` | `<name>`  | delete a macro <name>
 ## File manager
 
 

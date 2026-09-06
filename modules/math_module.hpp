@@ -15,7 +15,6 @@ double average(std::vector<int>&vec);
 
 void reduceCin();
 int reduce(std::vector<int>&vec);
-
 void mathClear();
 
 void generateRandomIntCin();

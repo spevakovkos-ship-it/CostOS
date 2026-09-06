@@ -18,7 +18,7 @@ struct historyCommand {
 #include <thread>
 #include <chrono>
 #include <functional>
-#include <algorithm>
+#include <algorithm>    
 
 #include "../modules/Errors_Table.hpp"
 #include "../pkg/counter/counter.hpp"
@@ -32,7 +32,7 @@ struct Macro {
     
     std::vector<string> args;
 
-
+    bool operator==(const Macro&) const = default; 
 };
 using namespace std::chrono_literals;
 class Shell {
@@ -49,8 +49,8 @@ class Shell {
         inline static const std::unordered_map<string,bool*> packages = {
             {"counter", &counterDownloaded},
             {"colorful_console",&colorful_consoleDownloaded},
-            {"fm20",&fm20Downloaded}
-        };
+            {"fm20",&fm20Downloaded},
+        };  
         std::vector<historyCommand> history;
         bool ignoreHistoryCmd = false;
     public:
@@ -83,18 +83,20 @@ class Shell {
                 {"renameMacro",&Shell::renameMacro},
                 {"history",&Shell::history_fn},
                 {"help",&Shell::help},
-                {"ver",&Shell::version},{"version",&Shell::version}
+                {"ver",&Shell::version},{"version",&Shell::version},
+                {"deleteMacro",&Shell::deleteMacro}
             };
             packageCommands = {
                 {"counter",&counter},
                 {"colorful_console",&colorful_console},
-                {"fm20",&fm20}
+                {"fm20",&fm20},
             };
             macroses = {};
             static const std::unordered_map<std::string,bool*> packages = {
                 {"counter",&counterDownloaded},
                 {"colorful_console",&colorful_consoleDownloaded},
-                {"fm20",&fm20Downloaded}
+                {"fm20",&fm20Downloaded},
+
             };
         }
 
@@ -188,6 +190,23 @@ class Shell {
             );
             m.args = macroCommand;
             macroses.push_back(m);
+        }
+        void deleteMacro(const Args& args) {
+            if (args.size() < 1) {
+                bios.logError("deleteMacro need args");
+                addError("ShellCore","deleteMacro need args");
+                return;
+            } 
+            string macroName = args[0];
+            Macro mac;
+
+            for (const auto& m: macroses) {
+                if (m.name == macroName) {
+                    std::erase(macroses,m);
+                    break;
+                }
+
+            }  
         }
         void executeMacro(const Args& args) {
              if (args.size() < 1) {
@@ -379,7 +398,7 @@ class Shell {
             } 
             int dur = 10;
             if (it != packages.end()) {
-                if (option == "--force" || option == "--f") dur = 20;
+                if (option == "--force" || option == "-f") dur = 20;
                 for (int i = 0;i < 100+dur;i+=dur) {
                     std::cout << "\n[PackagesManager] Resolving promises " << i <<"...";
                     std::this_thread::sleep_for(500ms);
