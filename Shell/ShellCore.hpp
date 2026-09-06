@@ -41,7 +41,7 @@ class Shell {
         Rights right;
         const int VERSIONPART1 = 1;
         const int VERSIONPART2 = 0;
-        const int VERSIONPART3 = 0;
+        const int VERSIONPART3 = 1;
 
         std::unordered_map<string,void (Shell::*)(const Args&)> commands;
         std::unordered_map<string,void (*)(const Args&)> packageCommands;
@@ -333,19 +333,19 @@ class Shell {
         void help(const Args& args) {
             std::cout <<  "| Command | Arguments | Description |\n";
             std::cout <<  "|---|---|---|\n";
-            std::cout <<  "| `clear` | - | Clears the terminal screen. \n";
-            std::cout <<  "| `print` | `<text1> [text2] ...` | Prints one or more arguments. |\n";
-            std::cout <<  "| `colorPrint` | `<Color> <text> ...` | Prints text using ANSI colors. |\n";
-            std::cout <<  "| `mathMode` | - | Opens the Math subshell. |\n";
-            std::cout <<  "| `errorsTable` | - | Opens the Errors Table. |\n";
-            std::cout <<  "| `fm` | `<command> <args for command1> ...` | Work with file manager\n";
-            std::cout <<  "| `anim` / `animate` | `<text>...` | Animates a text \n";
-            std::cout <<  "| `costos_pkg` | `<command> <args for command1> ...` | Work with packages\n";
-            std::cout <<  "| `repeat` | `<count> <body>` | repeat the <body> <count> times\n";
-            std::cout <<  "| `history` | - | Get the history of commands\n";
-            std::cout <<  "| `clear` | `-history`| clear a history\n";
-            std::cout <<  "| `q` / `exit` / `quit` | - | exit \n"; 
-            std::cout <<  "| `ver` / `version` | - | get a version of CostOS \n"; 
+            std::cout <<  "|  \033[32m`clear`\033[0m    | - | Clears the terminal screen. \n";
+            std::cout <<  "|  \033[32m`print`\033[0m    | `<text1> [text2] ...` | Prints one or more arguments. |\n";
+            std::cout <<  "|  \033[32m`colorPrint`\033[0m| `<Color> <text> ...` | Prints text using ANSI colors. |\n";
+            std::cout <<  "|  \033[32m`mathMode`\033[0m | - | Opens the Math subshell. |\n";
+            std::cout <<  "|  \033[32m`errorsTable`\033[0m| - | Opens the Errors Table. |\n";
+            std::cout <<  "|  \033[32m`fm`\033[0m | `<command> <args for command1> ...` | Work with file manager\n";
+            std::cout <<  "|  \033[32m`anim`\033[0m / `animate`| `<text>...`| Animates a text \n";
+            std::cout <<  "|  \033[32m`costos_pkg`\033[0m | `<command> <args for command1> ...` | Work with packages\n";
+            std::cout <<  "|  \033[32m`repeat`\033[0m | `<count> <body>` | repeat the <body> <count> times\n";
+            std::cout <<  "|  \033[32m`history`\033[0m | - | Get the history of commands\n";
+            std::cout <<  "|  \033[32m`clear`\033[0m   | `-history`| clear a history\n";
+            std::cout <<  "|  \033[32m`q` / `exit` / `quit`\033[0m| - | exit \n"; 
+            std::cout <<  "|  \033[32m`ver` / `version`\033[0m| - | get a version of CostOS \n"; 
         }
         void syscall(const Args& args) {
             if (right != Rights::SYSTEM) {
@@ -468,7 +468,7 @@ class Shell {
             }
         }
         void version(const Args& args) {
-            std::cout << VERSIONPART1 << "." << VERSIONPART2 << "." << VERSIONPART3 << std::endl;   
+            std::cout << "CostOS "<< VERSIONPART1 << "." << VERSIONPART2 << "." << VERSIONPART3 << std::endl;   
         }
         void costosPkg(const Args& args) {
             using pkgCommand = void(Shell::*)(const Args& args);

@@ -107,12 +107,12 @@ void averageCin() {
 void help() {
     std::cout <<  "| Command | Arguments | Description |\n";
     std::cout <<  "|---|---|---|\n";
-    std::cout <<  "| `calc` | - | Performs basic mathematical calculations. |\n";
-    std::cout <<  "| `getRandNum` | - | Generates a random number within a specified range. |\n";
-    std::cout <<  "| `sum` | - | Calculates the sum of entered integers. |\n";
-    std::cout <<  "| `avg` / `average` | - | Calculates the average of entered integers. |\n";
-    std::cout <<  "| `clear` | - | Clears the Math terminal. |\n";
-    std::cout <<  "| `exit` / `q` / `quit` | - | Returns to the main OS Shell. |\n"; 
+    std::cout <<  "| \033[32m`calc`\033[0m | - | Performs basic mathematical calculations. |\n";
+    std::cout <<  "| \033[32m`getRandNum`\033[0m | - | Generates a random number within a specified range. |\n";
+    std::cout <<  "| \033[32m`sum`\033[0m | - | Calculates the sum of entered integers. |\n";
+    std::cout <<  "| \033[32m`avg`\033[0m / `average` | - | Calculates the average of entered integers. |\n";
+    std::cout <<  "| \033[32m`clear`\033[0m | - | Clears the Math terminal. |\n";
+    std::cout <<  "| \033[32m`exit` / `q` / `quit`\033[0m | - | Returns to the main OS Shell. |\n"; 
 }
 void mathInterface(Shell& shell)  {
     using command = void(*)(void);

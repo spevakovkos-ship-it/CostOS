@@ -1,6 +1,6 @@
-# CostOS cpp V1.0.0
-
-A hobbyist CLI operating system emulator written in C++.
+# CostOS cpp V1.0.1
+ 
+ A hobbyist CLI operating system emulator written in C++.
 
 CostOS is a modular console-based system with a virtual BIOS, interactive Shell, Math Module, and centralized Errors Table.
 
@@ -20,11 +20,15 @@ CostOS is a modular console-based system with a virtual BIOS, interactive Shell,
 - Build-in File Manager
 - Packages system
 - Macro system
+
+## V1.0.1 Update List
+- Updated `version` command output by text `CostOS`
+- Updated `help` command output by ANSI colors in mathMode and OS mode 
 ## Core Shell Commands
 
 | Command | Arguments | Description |
 |---|---|---|
-| `clear` | — | Clears the terminal screen. |
+| `clear`| — | Clears the terminal screen. |
 | `print` | `<text1> [text2] ...` | Prints one or more arguments. |
 | `colorPrint` | `<Color> <text> ...` | Prints text using ANSI colors. |
 | `mathMode` | — | Opens the Math subshell. |
@@ -83,8 +87,6 @@ to enter into packages enter `costos_pkg` in normal mode
 |`costos_pkg install ` | `<pkg name>`| install a new package
 |`costos_pkg install ` | `<pkg name> --force ` | install a new package x2 speed
 |`costos_pkg install ` | `<pkg name> -f ` | install a new package x2 speed
-
-
 |`costos_pkg remove ` | `<pkg name>`| remove a package
 |`costos_pkg call` | `<pkg name> <args>` | call a package with args
 ### avalible packages
@@ -112,6 +114,7 @@ OS - User
 [PackagesManager] Resolving promises 70...
 [PackagesManager] Resolving promises 80...
 [PackagesManager] Resolving promises 90...
+[PackagesManager] Resolving promises 100...
 [PackagesManager] Getting a premission from BIOS  0...
 [PackagesManager] Getting a premission from BIOS  10...
 [PackagesManager] Getting a premission from BIOS  20...
@@ -122,6 +125,7 @@ OS - User
 [PackagesManager] Getting a premission from BIOS  70...
 [PackagesManager] Getting a premission from BIOS  80...
 [PackagesManager] Getting a premission from BIOS  90...
+[PackagesManager] Getting a premission from BIOS  100...
 [PackagesManager] Installing  0...
 [PackagesManager] Installing  10...
 [PackagesManager] Installing  20...
@@ -132,6 +136,7 @@ OS - User
 [PackagesManager] Installing  70...
 [PackagesManager] Installing  80...
 [PackagesManager] Installing  90...
+[PackagesManager] Installing  100...
 [PackagesManager] Done counter installed
 
 OS - User
