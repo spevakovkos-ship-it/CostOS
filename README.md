@@ -52,6 +52,9 @@ The script environment is a separate command interface launched with `COSMode` o
 |`removeLine` | `<name of file>` | Remove last line in script
 |`read` | `<name of file>` | Read text inside script
 |`help` | - | Help
+
+
+
 Example: 
 ```text 
 OS -User
