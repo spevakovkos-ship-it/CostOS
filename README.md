@@ -1,7 +1,4 @@
-# CostOS cpp V1.1.2
- 
- A hobbyist CLI operating system emulator written in C++.
-
+# CostOS cpp V1.2.2
 CostOS is a modular console-based system with a virtual BIOS, interactive Shell, Math Module, and centralized Errors Table.
 
 ## Features
@@ -21,10 +18,9 @@ CostOS is a modular console-based system with a virtual BIOS, interactive Shell,
 - Packages system
 - Macro system
 - Scripting system
-## V1.1.2 Update List
-- Updated Macro system 
-- Added a `wait` command
-
+## V1.2.2 Update List
+- Fixed a `find` command in package `fm20`
+- Added a `write`,`removeLine`,`read` and `help` in Scripting mode 
 ## Core Shell Commands
 
 | Command | Arguments | Description |
@@ -50,9 +46,12 @@ The script environment is a separate command interface launched with `COSMode` o
 
 | Command | Arguments | Description |
 |---|---|---|
-|`create` | `<name of file>` | Creates a file in folder Scripting that store you script
+|`create` | `<name of file>` | Creates a file in folder `Scripting` that store you script
 |`run` | `<name of file>` | Run the script
-
+|`write` | `<name of file> <text> ...` | Write text inside script
+|`removeLine` | `<name of file>` | Remove last line in script
+|`read` | `<name of file>` | Read text inside script
+|`help` | - | Help
 Example: 
 ```text 
 OS -User
@@ -60,9 +59,24 @@ OS -User
 CostOSScript -User
 # create myScript
 CostOSScript -User
+# write myScript print hi
+CostOSScript -User
 # run myScript
 hi 
-
+CostOSScript -User
+# write myScript print hi hi
+CostOSScript -User
+# run myScript
+hi
+hi
+CostOSScript -User
+# removeLine myScript
+CostOSScript -User
+# run myScript
+hi
+CostOSScript -User
+# read myScript
+print hi
 ```
 ## Math Subshell
 
@@ -476,3 +490,4 @@ enter `F7` on keyboard and CMake build the project
 ## Current Status
 
 CostOS is an ongoing hobby project focused on C++ development, modular architecture, CLI systems, BIOS simulation, configuration management, command dispatching, Scripting system ,Macro system and runtime error management.
+ 

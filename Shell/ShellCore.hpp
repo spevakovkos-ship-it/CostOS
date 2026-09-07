@@ -42,7 +42,7 @@ class Shell {
         string command;
         Rights right;
         const int VERSIONPART1 = 1;
-        const int VERSIONPART2 = 1;
+        const int VERSIONPART2 = 2;
         const int VERSIONPART3 = 2;
         using cmda =  void (Shell::*)(const Args&);
         using cmda2 = void (*)(const Args&);

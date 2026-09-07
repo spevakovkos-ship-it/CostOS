@@ -50,7 +50,7 @@ void wc_fn(const std::vector<std::string>& args){
 void find_fn(const std::vector<std::string>& args) {
     if (!fm20Downloaded) return;
 
-    std::string fileName = args[0];
+    std::string fileName = args[0] + ".cost_text";
     for (const auto& entry : std::filesystem::directory_iterator("UserData")) {
         if (entry.path().filename() == fileName) {
             std::cout << entry.path().string() << '\n';
