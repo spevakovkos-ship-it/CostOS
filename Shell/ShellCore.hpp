@@ -35,6 +35,7 @@ struct Macro {
 
     bool operator==(const Macro&) const = default; 
 };
+
 using namespace std::chrono_literals;
 class Shell {
     private:
@@ -42,11 +43,13 @@ class Shell {
         Rights right;
         const int VERSIONPART1 = 1;
         const int VERSIONPART2 = 1;
-        const int VERSIONPART3 = 1;
-
-        std::unordered_map<string,void (Shell::*)(const Args&)> commands;
-        std::unordered_map<string,void (*)(const Args&)> packageCommands;
+        const int VERSIONPART3 = 2;
+        using cmda =  void (Shell::*)(const Args&);
+        using cmda2 = void (*)(const Args&);
+        std::unordered_map<string,cmda> commands;
+        std::unordered_map<string,cmda2> packageCommands;
         std::vector<Macro> macroses;
+
         inline static const std::unordered_map<string,bool*> packages = {
             {"counter", &counterDownloaded},
             {"colorful_console",&colorful_consoleDownloaded},
@@ -59,7 +62,7 @@ class Shell {
         string INPUT1 = "OS -";
         string INPUT2 = "# ";
         string strRight;
-
+        
         Shell(BIOS& biosArg,bool tools) {
             this->right = Rights::USER;
             this->strRight = "User\n";
@@ -87,6 +90,7 @@ class Shell {
                 {"ver",&Shell::version},{"version",&Shell::version},
                 {"deleteMacro",&Shell::deleteMacro},
                 {"CostOSScriptMode",&Shell::scriptMode},{"COSMode",&Shell::scriptMode},
+                {"wait",&Shell::wait}
             };
             packageCommands = {
                 {"counter",&counter},
@@ -105,6 +109,7 @@ class Shell {
         void switchCommand(string& newCommand) {
             command = newCommand;
         }
+        
         void clear(const Args& args) {
             if (!args.empty()) {
                 if (args[0] == "-history") {
@@ -232,6 +237,7 @@ class Shell {
                 string resCommand;
 
                 int argIndex = 1,argIndex2 = 1;
+                std::size_t argsSP = 1;
                 bool allArg = false;
                 for (auto& v : mac.args) {
                     if ((v.find("-arg")) != std::string::npos) {
@@ -243,6 +249,7 @@ class Shell {
                         }
                         v.replace(v.find("-arg"), 4, args[argIndex]);
                         argIndex++;
+                        argsSP++;
                     }  else if (v.find("-allarg") != std::string::npos) {
                         if (allArg) {
                             break;
@@ -258,7 +265,7 @@ class Shell {
                         if (pos != std::string::npos) {
                             std::string allArgsStr = "";
                             
-                            for (size_t i = 1; i < args.size(); ++i) {
+                            for (size_t i = argsSP; i < args.size(); ++i) {
                                 allArgsStr += args[i];
                                 if (i < args.size() - 1) {
                                     allArgsStr += " ";
@@ -348,6 +355,7 @@ class Shell {
             std::cout <<  "|  \033[32m`clear`\033[0m   | `-history`| clear a history\n";
             std::cout <<  "|  \033[32m`q` / `exit` / `quit`\033[0m| - | exit \n"; 
             std::cout <<  "|  \033[32m`ver` / `version`\033[0m| - | get a version of CostOS \n"; 
+            std::cout <<  "|  \033[32m`wait`\033[0m| `<time> <timeLit>` | wait \n"; 
         }
         void syscall(const Args& args) {
             if (right != Rights::SYSTEM) {
@@ -471,6 +479,22 @@ class Shell {
         }
         void version(const Args& args) {
             std::cout << "CostOS "<< VERSIONPART1 << "." << VERSIONPART2 << "." << VERSIONPART3 << std::endl;   
+        }
+        
+        void wait(const Args& args) {
+            if (args.empty()) {
+                bios.logError("wait need arguments");
+                addError("ShellCore","wait need arguments");
+                return;
+            }
+            int time = std::stoi(args[0]);
+            string lit = args[1];
+
+            if (lit == "s") {
+                std::this_thread::sleep_for(std::chrono::seconds(time));
+            } else if (lit == "ms") {       
+                std::this_thread::sleep_for(std::chrono::milliseconds(time));
+            }
         }
         void costosPkg(const Args& args) {
             using pkgCommand = void(Shell::*)(const Args& args);

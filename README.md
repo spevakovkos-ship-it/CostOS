@@ -1,4 +1,4 @@
-# CostOS cpp V1.1.1
+# CostOS cpp V1.1.2
  
  A hobbyist CLI operating system emulator written in C++.
 
@@ -21,9 +21,9 @@ CostOS is a modular console-based system with a virtual BIOS, interactive Shell,
 - Packages system
 - Macro system
 - Scripting system
-## V1.1.1 Update List
-- Updated mathMode now INPUT1 saves 
-- Added a Scripting system
+## V1.1.2 Update List
+- Updated Macro system 
+- Added a `wait` command
 
 ## Core Shell Commands
 
@@ -43,7 +43,7 @@ CostOS is a modular console-based system with a virtual BIOS, interactive Shell,
 | `help` | - | help
 | `ver` / `version` | - | get a version of CostOS 
 | `COSMode` / `CostOSScriptMode` | - | Opens the scripting subshell
-
+| `wait`| `<time> <timeLit>` | wait 
 
 ## Scripting subshell
 The script environment is a separate command interface launched with `COSMode` or `CostOSScriptMode`.
@@ -70,12 +70,12 @@ The Math environment is a separate command interface launched with `mathMode`.
 
 | Command | Arguments | Description |
 |---|---|---|
-| `calc` | — | Performs basic mathematical calculations. |
-| `getRandNum` | — | Generates a random number within a specified range. |
-| `sum` | — | Calculates the sum of entered integers. |
-| `avg` / `average` | — | Calculates the average of entered integers. |
-| `clear` | — | Clears the Math terminal. |
-| `exit` / `q` / `quit` | — | Returns to the main OS Shell. |
+| `calc` | — | Performs basic mathematical calculations. 
+| `getRandNum` | — | Generates a random number within a specified range. 
+| `sum` | — | Calculates the sum of entered integers. 
+| `avg` / `average` | — | Calculates the average of entered integers. 
+| `clear` | — | Clears the terminal screen. 
+| `exit` / `q` / `quit` | — | Returns to the main OS Shell. 
 | `help` | - | help
 
 Example:
