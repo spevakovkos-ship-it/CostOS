@@ -1,4 +1,4 @@
-# CostOS cpp V1.2.2
+# CostOS cpp V1.2.3
 CostOS is a modular console-based system with a virtual BIOS, interactive Shell, Math Module, and centralized Errors Table.
 
 ## Features
@@ -18,9 +18,8 @@ CostOS is a modular console-based system with a virtual BIOS, interactive Shell,
 - Packages system
 - Macro system
 - Scripting system
-## V1.2.2 Update List
-- Fixed a `find` command in package `fm20`
-- Added a `write`,`removeLine`,`read` and `help` in Scripting mode 
+## V1.2.3 Update List
+- Added a `remove` in Scripting mode 
 ## Core Shell Commands
 
 | Command | Arguments | Description |
@@ -52,6 +51,7 @@ The script environment is a separate command interface launched with `COSMode` o
 |`removeLine` | `<name of file>` | Remove last line in script
 |`read` | `<name of file>` | Read text inside script
 |`help` | - | Help
+|`remove` |`<name of file>` | remove script
 
 
 

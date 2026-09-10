@@ -12,7 +12,7 @@
 
 enum class configPars {
     LOG_ERRORS,
-    MATH_ENABLED
+    MATH_ENABLED,
 };
 
 class BIOS {
@@ -28,11 +28,12 @@ class BIOS {
         BIOS() {
             try {getConfig();} catch (std::exception&) {
                 try {loadConfig(PATH);} catch (std::exception&) {
-                    addError("BIOS","Config corrupted used SB");
+                    addError ("BIOS","Config corrupted used SB");
                     PATH = "CostOS/BIOS/Config.conf";
                     try {loadConfig(PATH);} catch (std::exception&) {
                         std::cout << "\nError loading Config.conf, Please ensure that you are in the project folder." << std::endl;
                         std::terminate();   
+                         
                     }
                 }
                 addError("BIOS","Config corrupted used SB");

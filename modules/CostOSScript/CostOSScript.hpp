@@ -10,6 +10,7 @@ void COSWriteToScript(std::vector<std::string>&args,Shell&shell);
 void COSRemoveLineInScript(std::vector<std::string>&args,Shell&shell);
 void COSReadScript(std::vector<std::string>&args,Shell&shell);
 void COSHelp(std::vector<std::string>&args,Shell&shell);
+void COSRemoveScript(std::vector<std::string>&args,Shell&shell);
 
 
 void CostOSScript(Shell&shell);

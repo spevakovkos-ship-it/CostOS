@@ -19,7 +19,24 @@ void COSCreateScript(std::vector<std::string>& args, [[maybe_unused]] Shell& she
         return;
     }
 }
+void COSRemoveScript(std::vector<std::string>&args,Shell&shell) {
+    if (args.empty()) {
+        return;
+    }
+    std::string name = args[0];
+    std::string path = std::format("modules/CostOSScript/Scripts/{0}.cost_script", name);
+    
+    if (std::filesystem::remove(path)) {
+        std::cout << "File [" << name << "] removed" << std::endl;
+    } else {
+        std::cout << "File [" << name << "] not found path: " << path << std::endl;
 
+    }
+
+
+
+
+}
 
 void COSExecuteScript(std::vector<std::string>&args,Shell&shell) {
     if (args.empty()) {
@@ -112,6 +129,8 @@ void COSHelp(std::vector<std::string>&args,Shell&shell) {
     std::cout <<"|\033[32m`removeLine`\033[0m | `<name of file>` | Remove last line in script\n";
     std::cout <<"|\033[32m`read`\033[0m | `<name of file>` | Read text inside script\n";
     std::cout <<"|\033[32m`help`\033[0m | - | Help\n";
+    std::cout <<"|\033[32m`remove`\033[0m |`<name of file>` | remove script\n";
+
 }
 void CostOSScript(Shell&shell) {
     using command = void(*)(std::vector<std::string>&,Shell&shell);
@@ -125,7 +144,8 @@ void CostOSScript(Shell&shell) {
         {"write",COSWriteToScript},
         {"removeLine",COSRemoveLineInScript},
         {"read",COSReadScript},
-        {"help",COSHelp}
+        {"help",COSHelp},
+        {"remove",COSRemoveScript}
     };
 
     while (true) {
