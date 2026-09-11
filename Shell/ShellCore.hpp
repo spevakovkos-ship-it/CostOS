@@ -43,7 +43,7 @@ class Shell {
         Rights right;
         const int VERSIONPART1 = 1;
         const int VERSIONPART2 = 2;
-        const int VERSIONPART3 = 3;
+        const int VERSIONPART3 = 4;
         using cmda =  void (Shell::*)(const Args&);
         using cmda2 = void (*)(const Args&);
         std::unordered_map<string,cmda> commands;
