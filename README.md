@@ -1,4 +1,4 @@
-# CostOS cpp V1.2.3
+# CostOS cpp V1.2.4
 CostOS is a modular console-based system with a virtual BIOS, interactive Shell, Math Module, and centralized Errors Table.
 
 ## Features
@@ -18,8 +18,9 @@ CostOS is a modular console-based system with a virtual BIOS, interactive Shell,
 - Packages system
 - Macro system
 - Scripting system
-## V1.2.3 Update List
-- Added a `remove` in Scripting mode 
+## V1.2.4 Update List
+- Added a `clear` in errors mode and `clear -table` 
+- Refactor a architecture in errors mode
 ## Core Shell Commands
 
 | Command | Arguments | Description |
@@ -265,8 +266,7 @@ An error can be added with:
 
 ```cpp
 addError("BIOS", "Failed to load configuration");
-addError("Shell", "Unknown command");
-addError("Math", "Zero divide");
+addError("ShellCore", "Unknown command");
 ```
 
 ### Errors Table Commands
@@ -277,6 +277,8 @@ addError("Math", "Zero divide");
 | `exit` | Exits the Errors Table. |
 | `q` | Exits the Errors Table. |
 | `quit` | Exits the Errors Table. |
+| `clear` | - | clear the terminal screen
+| `clear` | `-table`| clear the errors
 
 Example:
 
@@ -295,10 +297,15 @@ Module [Math]:
   - Zero divide
 
 ErrorsTable - User
-# exit
+# clear -table
 
+ErrorsTable - User
+# getErrors
+Errors Table are empty
+ErrorsTable - User
+# q
 OS - User
-#
+# 
 ```
 
 The Errors Table uses the existing Shell instance and temporarily changes its prompt:
@@ -311,7 +318,7 @@ void errorsTableInterface(Shell& shell) {
 }
 ```
 
-When the user exits the interface, the prompt is restored to `OS -`.
+When the user exits the interface, the prompt is restored to prevision prompt.
 
 ## BIOS
 
