@@ -1,4 +1,4 @@
-# CostOS cpp V1.3.0
+# CostOS cpp V1.3.1
 CostOS is a modular console-based system with a virtual BIOS, interactive Shell, Math Module, and centralized Errors Table.
 
 ## Features
@@ -13,13 +13,14 @@ CostOS is a modular console-based system with a virtual BIOS, interactive Shell,
 - Dedicated Math subshell
 - Centralized Errors Table
 - Modular project structure
-- C++23
-- Build-in File Manager
+- C++2
+- Built-in File Manager
 - Packages system
 - Macro system
 - Scripting system
-## V1.3.0 Update List
-- Added a `get`,`set` and `inc/increment`  
+## V1.3.1 Update List
+- Added a `dec/decrement` and `append` 
+- Update a `repeat` command 
 ## Core Shell Commands
 
 | Command | Arguments | Description |
@@ -42,6 +43,7 @@ CostOS is a modular console-based system with a virtual BIOS, interactive Shell,
 | `set`| `<name> <type> <value>` | create a  variable 
 | `get`| `<name>` | get a variable
 | `inc` / `increment` | `<name> <value>` | inc a int var 
+|  `dec` / `decrement` |  `<name> <value>` | dec a int var
 
 
 

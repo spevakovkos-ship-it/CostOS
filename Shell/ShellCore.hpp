@@ -46,28 +46,28 @@ struct numVar {
     int value;
 };
 using namespace std::chrono_literals;
-class Shell {
-    private:
-        string command;
-        Rights right;
-        const int VERSIONPART1 = 1;
-        const int VERSIONPART2 = 3;
-        const int VERSIONPART3 = 0;
-        using cmda =  void (Shell::*)(const Args&);
-        using cmda2 = void (*)(const Args&);
-        std::unordered_map<string,cmda> commands;
-        std::unordered_map<string,cmda2> packageCommands;
-        std::vector<Macro> macroses;
-        std::vector<strVar> stringVars;
-        std::vector<numVar> intVars;
+    class Shell {
+        private:
+            string command;
+            Rights right;
+            const int VERSIONPART1 = 1;
+            const int VERSIONPART2 = 3;
+            const int VERSIONPART3 = 1;
+            using cmda =  void (Shell::*)(const Args&);
+            using cmda2 = void (*)(const Args&);
+            std::unordered_map<string,cmda> commands;
+            std::unordered_map<string,cmda2> packageCommands;
+            std::vector<Macro> macroses;
+            std::vector<strVar> stringVars;
+            std::vector<numVar> intVars;
 
-        inline static const std::unordered_map<string,bool*> packages = {
-            {"counter", &counterDownloaded},
-            {"colorful_console",&colorful_consoleDownloaded},
-            {"fm20",&fm20Downloaded},
-        };  
-        std::vector<historyCommand> history;
-        bool ignoreHistoryCmd = false;
+            inline static const std::unordered_map<string,bool*> packages = {
+                {"counter", &counterDownloaded},
+                {"colorful_console",&colorful_consoleDownloaded},
+                {"fm20",&fm20Downloaded},
+            };  
+            std::vector<historyCommand> history;
+            bool ignoreHistoryCmd = false;
     public:
         BIOS bios;
         string INPUT1 = "OS -";
@@ -105,6 +105,8 @@ class Shell {
                 {"get",&Shell::get},
                 {"set",&Shell::set},
                 {"inc",&Shell::increment},{"increment",&Shell::increment},
+                {"append",&Shell::appendToVar},
+                {"dec",&Shell::decrement},{"decrement",&Shell::decrement},
             };
             packageCommands = {
                 {"counter",&counter},
@@ -335,15 +337,32 @@ class Shell {
             } 
         }
         void repeat(const Args& args ){ 
-            if (args.size() <= 1) {
+            if (args.size() < 1) {
                 bios.logError("Repeat need args");
                 addError("ShellCore","Repeat need args");
                 return;
             }
-            int count = std::stoi(args[0]);
+            string rawCount = args[0];
+            int count;
+            bool found = false;
+            if ((rawCount.find('(')) != string::npos) {
+                std::size_t startColonPos = rawCount.find('(');
+                std::size_t endColonPos = rawCount.find(')');
 
+                std::size_t length = endColonPos - (startColonPos + 1);
+
+                std::string variableName = rawCount.substr(startColonPos + 1, length);
+                for (const auto& var : intVars) {
+                    if (var.name == variableName) {
+                        count = var.value;
+                        found = true;
+                        break;
+                    }
+                }
+               
+            }
             string resCommand;
-
+            if (!found) count = std::stoi(rawCount);
             for (int i = 1;i < args.size();++i) {
                 resCommand += args[i];
                 resCommand += " ";
@@ -373,6 +392,7 @@ class Shell {
             std::cout <<  "| \033[32m`set`\033[0m| `<name> <type> <value>` | create a  variable \n"; 
             std::cout <<  "| \033[32m`get`\033[0m| `<name>` | get a variable\n"; 
             std::cout <<  "| \033[32m`inc` / `increment`\033[0m | `<name> <value>` | inc a int var \n"; 
+            std::cout <<  "|  \033[32m`dec` / `decrement`\033[0m |  `<name> <value>` | dec a int var\n"; 
 
 
         }
@@ -457,8 +477,11 @@ class Shell {
             int numValue;
 
             if (type == "str"){
-                strValue = args[2];
                 
+                for (int i = 2;i < args.size();++i){
+                    strValue.append(args[i] + ' ');
+                }
+
                 strVar v;
                 v.name = name;
                 v.value = strValue;
@@ -520,6 +543,50 @@ class Shell {
             for (auto& var : intVars) {
                 if (var.name == name) {
                     var.value += v;
+                    return;
+                }            
+            }
+            bios.logError("var not found");
+            addError("ShellCore","var not found");
+            return;
+        }
+        void appendToVar(const Args& args) {
+            if (args.empty()) {
+                bios.logError("append need args usage : append <name> <str> ");
+                addError("ShellCore","append need args usage : append <name> <value>");
+                return;
+            }
+
+            string name = args[0];
+            string str;
+
+            for (int i = 1;i < args.size();++i) {
+                str.append(args[i] + ' '); 
+            }
+            for (auto& var : stringVars) {
+                if (var.name == name) {
+                    var.value.append(str);
+                    return;
+                }
+            }
+
+            bios.logError("Variable not found");
+            addError("ShellCore","Variable not found");
+        }
+        void decrement(const Args& args) {
+            if (args.empty()) {
+                bios.logError("decrement need args usage : decrement <name> <value> Note: value is not neccessary ");
+                addError("ShellCore","decrement need args usage : decrement <name> <value> Note: value is not neccessary");
+                return;
+            }
+            string name = args[0];
+            int v = 1;
+            if (args.size() == 2) v = std::stoi(args[1]);
+            
+
+            for (auto& var : intVars) {
+                if (var.name == name) {
+                    var.value -= v;
                     return;
                 }            
             }
@@ -903,9 +970,9 @@ class Shell {
 
             string arg;
             
-            while (iss >> arg) 
+            while (iss >> arg) {
                 args.push_back(arg);
-
+            }
         
             auto it = commands.find(cmd);
 
