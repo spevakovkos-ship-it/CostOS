@@ -35,20 +35,31 @@ struct Macro {
 
     bool operator==(const Macro&) const = default; 
 };
+struct strVar {
+    string name;
+    
+    string value;
+};
+struct numVar {
+    string name;
 
+    int value;
+};
 using namespace std::chrono_literals;
 class Shell {
     private:
         string command;
         Rights right;
         const int VERSIONPART1 = 1;
-        const int VERSIONPART2 = 2;
+        const int VERSIONPART2 = 3;
         const int VERSIONPART3 = 4;
         using cmda =  void (Shell::*)(const Args&);
         using cmda2 = void (*)(const Args&);
         std::unordered_map<string,cmda> commands;
         std::unordered_map<string,cmda2> packageCommands;
         std::vector<Macro> macroses;
+        std::vector<strVar> stringVars;
+        std::vector<numVar> intVars;
 
         inline static const std::unordered_map<string,bool*> packages = {
             {"counter", &counterDownloaded},
@@ -90,7 +101,10 @@ class Shell {
                 {"ver",&Shell::version},{"version",&Shell::version},
                 {"deleteMacro",&Shell::deleteMacro},
                 {"CostOSScriptMode",&Shell::scriptMode},{"COSMode",&Shell::scriptMode},
-                {"wait",&Shell::wait}
+                {"wait",&Shell::wait},
+                {"get",&Shell::get},
+                {"set",&Shell::set},
+                {"inc",&Shell::increment},{"increment",&Shell::increment},
             };
             packageCommands = {
                 {"counter",&counter},
@@ -356,6 +370,11 @@ class Shell {
             std::cout <<  "|  \033[32m`q` / `exit` / `quit`\033[0m| - | exit \n"; 
             std::cout <<  "|  \033[32m`ver` / `version`\033[0m| - | get a version of CostOS \n"; 
             std::cout <<  "|  \033[32m`wait`\033[0m| `<time> <timeLit>` | wait \n"; 
+            std::cout <<  "| \033[32m`set`\033[0m| `<name> <type> <value>` | create a  variable \n"; 
+            std::cout <<  "| \033[32m`get`\033[0m| `<name>` | get a variable\n"; 
+            std::cout <<  "| \033[32m`inc` / `increment`\033[0m | `<name> <value>` | inc a int var \n"; 
+
+
         }
         void syscall(const Args& args) {
             if (right != Rights::SYSTEM) {
@@ -424,6 +443,89 @@ class Shell {
                 *it->second = true;
                 std::cout << "\n[PackagesManager] Done " << packageName <<" installed\n";
             }
+        }
+        void set(const Args& args) {
+            if (args.size() < 3) {
+                bios.logError("Set need args usage: set <name> <type> <value>");
+                addError("ShellCore","Set need args usage: set <name> <type> <value>");
+                return;
+            }
+
+            string name = args[0];
+            string type = args[1];
+            string strValue;
+            int numValue;
+
+            if (type == "str"){
+                strValue = args[2];
+                
+                strVar v;
+                v.name = name;
+                v.value = strValue;
+                stringVars.emplace_back(v);
+            } else if (type == "num") {
+                numValue = std::stoi(args[2]);
+                
+                numVar v;
+                v.name = name;
+                v.value = numValue;
+                intVars.emplace_back(v);
+            } else {
+                bios.logError("Unknown type. Types: num,str");
+                addError("ShellCore","Unknown type. Types: num,str");
+                return;
+            }
+        }
+
+        void get(const Args& args) {
+            if (args.empty()) {
+                bios.logError("Get need args usage: get <name>");
+                addError("ShellCore","Get need args usage: get <name>");
+                return;
+
+            }
+            bool found = false;
+            string name = args[0];
+            for (auto& v : stringVars) {
+                if (v.name == name) {
+                    found = true;
+                    std::cout << "Name: " << v.name << " Value: " << v.value << std::endl;
+                }
+            }
+            if (found) return;
+            for (auto& v : intVars) {
+                if (v.name == name) {
+                    found = true;
+                    std::cout << "Name: " << v.name << " Value: " << v.value << std::endl;
+                }
+            }
+            if (!found) {
+                bios.logError("Var not found");
+                addError("ShellCore","Var not found");
+                return;
+            }
+        }
+        void increment(const Args&  args) {
+            if (args.empty()) {
+                bios.logError("increment need args usage : increment <name> <value> Note: value is not neccessary");
+                addError("ShellCore","increment need args usage : increment <name> <value> Note: value is not neccessary");
+                return;
+            }
+
+            string name = args[0];
+            int v = 1;
+            if (args.size() == 2) v = std::stoi(args[1]);
+            
+
+            for (auto& var : intVars) {
+                if (var.name == name) {
+                    var.value += v;
+                    return;
+                }            
+            }
+            bios.logError("var not found");
+            addError("ShellCore","var not found");
+            return;
         }
         void pkgCall(const Args& args) {
             if (args.empty()) {

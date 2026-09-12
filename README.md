@@ -1,4 +1,4 @@
-# CostOS cpp V1.2.4
+# CostOS cpp V1.3.0
 CostOS is a modular console-based system with a virtual BIOS, interactive Shell, Math Module, and centralized Errors Table.
 
 ## Features
@@ -18,9 +18,8 @@ CostOS is a modular console-based system with a virtual BIOS, interactive Shell,
 - Packages system
 - Macro system
 - Scripting system
-## V1.2.4 Update List
-- Added a `clear` in errors mode and `clear -table` 
-- Refactor a architecture in errors mode
+## V1.3.0 Update List
+- Added a `get`,`set` and `inc/increment`  
 ## Core Shell Commands
 
 | Command | Arguments | Description |
@@ -40,6 +39,11 @@ CostOS is a modular console-based system with a virtual BIOS, interactive Shell,
 | `ver` / `version` | - | get a version of CostOS 
 | `COSMode` / `CostOSScriptMode` | - | Opens the scripting subshell
 | `wait`| `<time> <timeLit>` | wait 
+| `set`| `<name> <type> <value>` | create a  variable 
+| `get`| `<name>` | get a variable
+| `inc` / `increment` | `<name> <value>` | inc a int var 
+
+
 
 ## Scripting subshell
 The script environment is a separate command interface launched with `COSMode` or `CostOSScriptMode`.
