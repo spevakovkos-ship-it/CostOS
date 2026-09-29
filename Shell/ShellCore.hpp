@@ -19,6 +19,8 @@ struct historyCommand {
 #include <chrono>
 #include <functional>
 #include <algorithm>    
+#include <type_traits>
+
 
 #include "../modules/Errors_Table.hpp"
 #include "../pkg/counter/counter.hpp"
@@ -122,7 +124,7 @@ using namespace std::chrono_literals;
             };
         }
 
-        void switchCommand(string& newCommand) {
+        void switchCommand(const string& newCommand) {
             command = newCommand;
         }
         
@@ -767,7 +769,7 @@ using namespace std::chrono_literals;
                 addError("ShellCore","usage: <fileName> <text>");
                 return;         
             }
-            std::string path = std::format("UserData/{}",args[0] + ".cost_text");
+            std::string path = "UserData/" + args[0] + ".cost_text";
             std::ofstream f(path, std::ios_base::app);
 
             if (!f.is_open()) {
@@ -794,7 +796,7 @@ using namespace std::chrono_literals;
                     name.append(v);
                 }
             }
-            std::string path = std::format("UserData/{}", name + ".cost_text");
+            std::string path = "UserData/" + args[0] + ".cost_text";
 
             std::ifstream f(path);
 
@@ -808,7 +810,7 @@ using namespace std::chrono_literals;
         }
         void fmRemove(const Args& args) {
             std::string name = args[0];
-            std::filesystem::path path = std::format("UserData/{}", name + ".cost_text");
+            std::filesystem::path path = "UserData/" + args[0] + ".cost_text";
             try {
                 if (std::filesystem::remove(path)) {
                     std::cout << "File " << path << " deleted" << std::endl;
@@ -894,7 +896,7 @@ using namespace std::chrono_literals;
         void history_fn(const Args& args){
             for (const auto& v : history) {
                 std::cout << v.cmd << " ";
-                for (const auto& vv : v.args) {
+                for (const auto& vv : v.args) { 
                     std::cout << vv << " ";
                 }
                 std::cout << std::endl;
@@ -903,9 +905,10 @@ using namespace std::chrono_literals;
         void scriptMode(const Args& args) {
             CostOSScript(*this);
         }
+      
         void executeCommand() {
             std::istringstream iss(command);
-            std::string cmd;
+            std::string cmd; 
             Args args;
             
             iss >> cmd;

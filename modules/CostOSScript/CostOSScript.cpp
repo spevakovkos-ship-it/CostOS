@@ -11,7 +11,7 @@ void COSCreateScript(std::vector<std::string>& args, [[maybe_unused]] Shell& she
     std::string name = args[0];
     args.erase(args.begin()); 
 
-    std::string path = std::format("modules/CostOSScript/Scripts/{0}.cost_script", name);
+    std::string path = "modules/CostOSScript/Scripts/"+name+".cost_script";
     
     std::ofstream f(path);
 
@@ -24,7 +24,7 @@ void COSRemoveScript(std::vector<std::string>&args,Shell&shell) {
         return;
     }
     std::string name = args[0];
-    std::string path = std::format("modules/CostOSScript/Scripts/{0}.cost_script", name);
+    std::string path = "modules/CostOSScript/Scripts/"+name+".cost_script";
     
     if (std::filesystem::remove(path)) {
         std::cout << "File [" << name << "] removed" << std::endl;
@@ -44,7 +44,7 @@ void COSExecuteScript(std::vector<std::string>&args,Shell&shell) {
     }
 
     std::string name = args[0]; 
-    std::string path = std::format("modules/CostOSScript/Scripts/{0}.cost_script",name);
+    std::string path = "modules/CostOSScript/Scripts/"+name+".cost_script";
     
     std::ifstream f(path);
 
@@ -59,7 +59,7 @@ void COSWriteToScript(std::vector<std::string>&args,Shell&shell) {
         return;
     }
     std::string name = args[0]; 
-    std::string path = std::format("modules/CostOSScript/Scripts/{0}.cost_script",name);
+    std::string path = "modules/CostOSScript/Scripts/"+name+".cost_script";
     std::string text;
     int i = 0;
     for (const auto& textPart : args) {
@@ -81,7 +81,7 @@ void COSReadScript(std::vector<std::string>&args,Shell&shell) {
     if (args.empty() )return;
 
     std::string name = args[0]; 
-    std::string path = std::format("modules/CostOSScript/Scripts/{0}.cost_script", name);
+    std::string path = "modules/CostOSScript/Scripts/"+name+".cost_script";
     std::ifstream in(path);
 
     std::string line;
@@ -93,7 +93,7 @@ void COSRemoveLineInScript(std::vector<std::string>& args, Shell& shell) {
         return;
     }  
     std::string name = args[0]; 
-    std::string path = std::format("modules/CostOSScript/Scripts/{0}.cost_script", name);
+    std::string path = "modules/CostOSScript/Scripts/"+name+".cost_script";
     std::ifstream in(path);
 
 

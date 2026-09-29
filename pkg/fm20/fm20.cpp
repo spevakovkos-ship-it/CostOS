@@ -19,7 +19,7 @@
 void wc_fn(const std::vector<std::string>& args){
     if (!fm20Downloaded) return;
     const std::string fileName = args[0];
-    std::string path = std::format("UserData/{0}",fileName + ".cost_text");
+    std::string path ="UserData/" + fileName + ".cost_text" ;
 
     std::ifstream f(path);
 
