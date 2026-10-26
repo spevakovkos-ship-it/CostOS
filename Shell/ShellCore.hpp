@@ -19,7 +19,7 @@ struct historyCommand {
 #include <chrono>
 #include <functional>
 #include <algorithm>    
-#include <type_traits>
+     
 
 
 #include "../modules/Errors_Table.hpp"
@@ -53,8 +53,8 @@ using namespace std::chrono_literals;
             string command;
             Rights right;
             const int VERSIONPART1 = 1;
-            const int VERSIONPART2 = 3;
-            const int VERSIONPART3 = 1;
+            const int VERSIONPART2 = 4;
+            const int VERSIONPART3 = 0;
             using cmda =  void (Shell::*)(const Args&);
             using cmda2 = void (*)(const Args&);
             std::unordered_map<string,cmda> commands;
@@ -346,25 +346,9 @@ using namespace std::chrono_literals;
             }
             string rawCount = args[0];
             int count;
-            bool found = false;
-            if ((rawCount.find('(')) != string::npos) {
-                std::size_t startColonPos = rawCount.find('(');
-                std::size_t endColonPos = rawCount.find(')');
 
-                std::size_t length = endColonPos - (startColonPos + 1);
-
-                std::string variableName = rawCount.substr(startColonPos + 1, length);
-                for (const auto& var : intVars) {
-                    if (var.name == variableName) {
-                        count = var.value;
-                        found = true;
-                        break;
-                    }
-                }
-               
-            }
             string resCommand;
-            if (!found) count = std::stoi(rawCount);
+            count = std::stoi(rawCount);
             for (int i = 1;i < args.size();++i) {
                 resCommand += args[i];
                 resCommand += " ";
@@ -539,8 +523,7 @@ using namespace std::chrono_literals;
 
             string name = args[0];
             int v = 1;
-            if (args.size() == 2) v = std::stoi(args[1]);
-            
+            if (args.size() > 0) v = std::stoi(args[1]);
 
             for (auto& var : intVars) {
                 if (var.name == name) {
@@ -583,9 +566,7 @@ using namespace std::chrono_literals;
             }
             string name = args[0];
             int v = 1;
-            if (args.size() == 2) v = std::stoi(args[1]);
-            
-
+            if (args.size() == 2)  v = std::stoi(args[1]);
             for (auto& var : intVars) {
                 if (var.name == name) {
                     var.value -= v;
@@ -915,9 +896,34 @@ using namespace std::chrono_literals;
 
             string arg;
             
-            while (iss >> arg) 
-                args.push_back(arg);
+            while (iss >> arg) {
+                string raw = arg;
+                bool found = false;
+                if ((raw.find('(')) != string::npos) {
+                    std::size_t startColonPos = raw.find('(');
+                    std::size_t endColonPos = raw.find(')');
 
+                    std::size_t length = endColonPos - (startColonPos + 1);
+
+                    std::string variableName = raw.substr(startColonPos + 1, length);
+                    for (const auto& var : intVars) {
+                        if (var.name == variableName) {
+                            args.push_back(std::to_string(var.value));
+                            found = true;
+                            break;
+                        }
+                    }
+                    for (const auto& var : stringVars) {
+                        if (var.name == variableName) {
+                            args.push_back(var.value);
+                            found = true;
+                            break;
+                        }
+                    }
+                }  else {
+                    args.push_back(arg);
+                }    
+            }
         
             auto it = commands.find(cmd);
 
