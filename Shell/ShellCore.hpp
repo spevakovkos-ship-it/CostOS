@@ -54,7 +54,7 @@ using namespace std::chrono_literals;
             Rights right;
             const int VERSIONPART1 = 1;
             const int VERSIONPART2 = 4;
-            const int VERSIONPART3 = 0;
+            const int VERSIONPART3 = 1;
             using cmda =  void (Shell::*)(const Args&);
             using cmda2 = void (*)(const Args&);
             std::unordered_map<string,cmda> commands;
@@ -109,6 +109,7 @@ using namespace std::chrono_literals;
                 {"inc",&Shell::increment},{"increment",&Shell::increment},
                 {"append",&Shell::appendToVar},
                 {"dec",&Shell::decrement},{"decrement",&Shell::decrement},
+                {"in",&Shell::in}
             };
             packageCommands = {
                 {"counter",&counter},
@@ -338,6 +339,38 @@ using namespace std::chrono_literals;
                 }
             } 
         }
+        void in(const Args& args){
+            if (args.size() < 2) {
+                bios.logError("In need args");
+                addError("ShellCore","In need args");
+                return; 
+            }
+            string input = args[0];
+            string variableName = args[1];
+            string type = args[2];
+            if (type == "num") {
+                for (auto& var : intVars) {
+                    if (var.name == variableName) {
+                        std::cout << input;
+                        std::string userInput;
+                        std::getline(std::cin,userInput);
+                        var.value = std::stoi(userInput);
+                        break;
+                    }
+                }
+                
+            } else if (type == "str") {
+                for (auto& var : stringVars) {
+                    if (var.name == variableName) {
+                        std::cout << input;
+                        std::getline(std::cin,var.value);
+                        
+                        break;
+                    }
+                }
+            }
+
+        }
         void repeat(const Args& args ){ 
             if (args.size() < 1) {
                 bios.logError("Repeat need args");
@@ -356,6 +389,7 @@ using namespace std::chrono_literals;
             this->switchCommand(resCommand);
             for (int i = 0;i < count;++i) {
                 this->executeCommand();
+                
             }
         }
         void help(const Args& args) {
@@ -379,6 +413,7 @@ using namespace std::chrono_literals;
             std::cout <<  "| \033[32m`get`\033[0m| `<name>` | get a variable\n"; 
             std::cout <<  "| \033[32m`inc` / `increment`\033[0m | `<name> <value>` | inc a int var \n"; 
             std::cout <<  "|  \033[32m`dec` / `decrement`\033[0m |  `<name> <value>` | dec a int var\n"; 
+            std::cout <<  "|  \033[32m`in`\033[0m |  `<input> <variableName> <variableType>` | get user input in var\n"; 
 
 
         }
@@ -523,7 +558,7 @@ using namespace std::chrono_literals;
 
             string name = args[0];
             int v = 1;
-            if (args.size() > 0) v = std::stoi(args[1]);
+            if (args.size() > 1) v = std::stoi(args[1]);
 
             for (auto& var : intVars) {
                 if (var.name == name) {
