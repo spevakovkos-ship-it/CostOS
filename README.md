@@ -503,6 +503,8 @@ enter `F7` on keyboard and CMake build the project
 ```bash
 ./costos.exe -skipLoading
 ```
+## License
+GNU General Public License v2.0 only (GPL-2.0-only).
 ## Current Status
 
 CostOS is an ongoing hobby project focused on C++ development, modular architecture, CLI systems, BIOS simulation, configuration management, command dispatching, Scripting system ,Macro system and runtime error management.

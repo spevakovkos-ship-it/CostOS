@@ -7,4 +7,5 @@
 *.cost_script
 .vscode/
 !Makefile 
+!LICENSE.txt
 build/
